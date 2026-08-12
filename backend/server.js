@@ -1,4 +1,4 @@
-// backend/server.js
+// backend/server.js - SIRF RESET ROUTE ADD KIYA
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -33,12 +33,17 @@ app.use('/api/scan', scanRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/history', historyRoutes);
 
-// Frontend routes
+// Frontend routes - SIRF YE ADD KIYA (reset route)
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 app.get('/reset-password/:token', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+// ✅ YE LINE ADD KIYA - Reset route frontend pe bhejne ke liye
+app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
