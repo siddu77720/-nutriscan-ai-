@@ -1,4 +1,4 @@
-// backend/server.js - EXPRESS 5 COMPATIBLE
+// backend/server.js - EXPRESS 5 FINAL FIX
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -45,7 +45,7 @@ app.use('/api/history', historyRoutes);
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // ============================================
-// FRONTEND ROUTES - EXPRESS 5 COMPATIBLE
+// FRONTEND ROUTES - EXPRESS 5 FINAL FIX
 // ============================================
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
@@ -55,12 +55,9 @@ app.get('/reset-password/:token', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// ============================================
-// ✅ CORRECT EXPRESS 5 SYNTAX
-// ============================================
-// Express 5 mein wildcard route ke liye
-// (.*) use karna hai
-app.get('(.*)', (req, res) => {
+// ✅ EXPRESS 5 COMPATIBLE WILDCARD
+// Use '/:path*' for Express 5
+app.get('/:path*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
