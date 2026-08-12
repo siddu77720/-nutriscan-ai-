@@ -24,6 +24,10 @@
       "dest": "/frontend/script.js"
     },
     {
+      "src": "/reset-password",
+      "dest": "/frontend/index.html"
+    },
+    {
       "src": "/reset-password/(.*)",
       "dest": "/frontend/index.html"
     },
