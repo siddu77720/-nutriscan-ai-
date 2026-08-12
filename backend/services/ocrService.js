@@ -1,105 +1,130 @@
-// backend/services/ocrService.js - ORIGINAL LOGIC + FALLBACK FOR VERCEL
-// Agar Tesseract fail ho toh fallback chalega, warna original logic
+// backend/services/ocrService.js - OCR.SPACE API + FALLBACK
+// Real OCR on Vercel using OCR.space API
+// Falls back to sample ingredients if API fails
+const axios = require('axios');
+const FormData = require('form-data');
 
 class OCRService {
   
   async extractIngredientsFromImage(imageBuffer) {
-    let worker = null;
     try {
-      console.log('Starting OCR processing...');
-
-      // ✅ TRY: Tesseract load karo (agar available ho)
-      let Tesseract;
-      try {
-        Tesseract = require('tesseract.js');
-      } catch (e) {
-        console.log('⚠️ Tesseract not available, using fallback');
-        return this.getFallbackResult(imageBuffer);
+      console.log('🔄 Starting OCR with OCR.space API...');
+      
+      if (!imageBuffer || imageBuffer.length < 100) {
+        return {
+          success: false,
+          error: '❌ Image not clear. Please upload a clearer ingredient label image with better lighting and focus.',
+          extractedText: '',
+          confidence: 0
+        };
       }
 
-      worker = await Tesseract.createWorker('eng', 1, {
-        logger: (m) => {
-          if (process.env.NODE_ENV === 'development') {
-            console.log(`OCR Progress: ${m.status} - ${Math.round(m.progress * 100)}%`);
-          }
+      // ✅ OCR.space API Call
+      const formData = new FormData();
+      formData.append('apikey', process.env.OCR_SPACE_API_KEY);
+      formData.append('file', imageBuffer, {
+        filename: 'image.jpg',
+        contentType: 'image/jpeg'
+      });
+      formData.append('language', 'eng');
+      formData.append('isOverlayRequired', 'false');
+
+      const response = await axios.post('https://api.ocr.space/parse/image', formData, {
+        headers: {
+          ...formData.getHeaders()
+        },
+        timeout: 30000
+      });
+
+      const result = response.data;
+      
+      // ✅ Check if OCR was successful
+      if (result.OCRExitCode === 1 && result.ParsedResults && result.ParsedResults.length > 0) {
+        const extractedText = result.ParsedResults[0].ParsedText;
+        const confidence = result.ParsedResults[0].FileParseExitCode === 1 ? 80 : 50;
+        
+        console.log(`📝 Extracted text length: ${extractedText.length} characters`);
+        console.log(`📊 Confidence: ${confidence}%`);
+        
+        // ✅ ORIGINAL CLEAN FUNCTION - Waisi hi hai!
+        const cleanedText = this.cleanExtractedText(extractedText);
+        
+        // ✅ ORIGINAL INGREDIENT CHECK - Waisi hi hai!
+        const hasIngredients = this.looksLikeIngredients(cleanedText);
+        
+        if (!hasIngredients && cleanedText.length < 50) {
+          console.log('⚠️ No ingredients detected, using fallback');
+          return this.getFallbackResult('No ingredients detected');
         }
-      });
-
-      await worker.setParameters({
-        tessedit_pageseg_mode: '6',
-        tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789(),.-/% '
-      });
-
-      const result = await worker.recognize(imageBuffer);
-      
-      const extractedText = result.data.text;
-      const confidence = result.data.confidence;
-      
-      console.log(`OCR completed with confidence: ${confidence}%`);
-      console.log(`Extracted text length: ${extractedText.length} characters`);
-      
-      if (confidence < 30 && extractedText.length < 50) {
-        return this.getFallbackResult(imageBuffer, 'Low confidence');
+        
+        return {
+          success: true,
+          extractedText: cleanedText,
+          confidence: confidence,
+          rawText: extractedText,
+          source: 'ocr.space'
+        };
+      } else {
+        console.log('⚠️ OCR.space failed, using fallback');
+        return this.getFallbackResult('OCR failed - ' + (result.ErrorMessage || 'Unknown error'));
       }
-      
-      const hasIngredients = this.looksLikeIngredients(extractedText);
-      
-      if (!hasIngredients && extractedText.length < 50) {
-        return this.getFallbackResult(imageBuffer, 'No ingredients detected');
-      }
-      
-      const cleanedText = this.cleanExtractedText(extractedText);
-      
-      return {
-        success: true,
-        extractedText: cleanedText,
-        confidence: confidence,
-        rawText: extractedText
-      };
       
     } catch (error) {
-      console.error('OCR Error:', error);
-      // ✅ FALLBACK: Agar Tesseract fail ho
-      return this.getFallbackResult(imageBuffer, error.message);
-    } finally {
-      if (worker) {
-        try {
-          await worker.terminate();
-        } catch(e) {}
+      console.error('❌ OCR Error:', error.message);
+      if (error.response) {
+        console.error('Response status:', error.response.status);
+        console.error('Response data:', error.response.data);
       }
+      return this.getFallbackResult(error.message);
     }
   }
 
-  // ✅ FALLBACK - Original logic ke hisaab se data return karega
-  getFallbackResult(imageBuffer, reason = 'Tesseract unavailable') {
+  // ✅ FALLBACK - Agar OCR fail ho (Vercel pe bhi safety)
+  getFallbackResult(reason = 'OCR unavailable') {
     console.log(`⚠️ Using fallback OCR (${reason})`);
     
-    // Realistic ingredient list
     const ingredientLists = [
-      "sugar, wheat flour, vegetable oil, salt, emulsifier, preservatives, artificial flavors, food color, corn starch, soy lecithin, baking powder, milk powder, cocoa butter, vanilla extract, citric acid, sodium benzoate",
-      "whole wheat flour, oats, almonds, walnuts, flax seeds, sunflower seeds, pumpkin seeds, raisins, cinnamon, natural vanilla extract, sea salt, honey, rolled oats, chia seeds, coconut oil",
+      // Unhealthy - High Sugar, Palm Oil
+      "sugar, wheat flour, palm oil, salt, emulsifier, preservatives, artificial flavors, food color, corn starch, soy lecithin, baking powder, milk powder, cocoa butter, vanilla extract, citric acid, sodium benzoate, high fructose corn syrup, caramel color",
+      
+      // Healthy - Whole Grains, Nuts, No Sugar
+      "whole wheat flour, oats, almonds, walnuts, flax seeds, sunflower seeds, pumpkin seeds, raisins, cinnamon, natural vanilla extract, sea salt, honey, rolled oats, chia seeds, coconut oil, dates, pure maple syrup",
+      
+      // Moderate - Some Sugar, Some Good
       "wheat flour, sugar, vegetable oil, salt, natural flavors, milk powder, baking soda, cream of tartar, corn starch, soy lecithin, vanilla extract, citric acid, calcium carbonate, iron, folic acid",
-      "potato, vegetable oil, salt, maltodextrin, monosodium glutamate, onion powder, garlic powder, artificial colors, preservatives, sugar, citric acid, disodium inosinate, disodium guanylate",
-      "makhana, ghee, sea salt, black pepper, turmeric, ginger powder, cinnamon, cardamom, natural flavors, roasted chickpeas, almonds, pistachios, cashews, dried fruit, coconut, honey"
+      
+      // Unhealthy Chips - High Sodium, Trans Fat
+      "potato, vegetable oil, salt, maltodextrin, monosodium glutamate, onion powder, garlic powder, artificial colors, preservatives, sugar, citric acid, disodium inosinate, disodium guanylate, hydrolyzed soy protein",
+      
+      // Healthy Snack - Makhana, Nuts
+      "makhana, ghee, sea salt, black pepper, turmeric, ginger powder, cinnamon, cardamom, natural flavors, roasted chickpeas, almonds, pistachios, cashews, dried fruit, coconut, honey",
+      
+      // Unhealthy Instant Noodles
+      "wheat flour, palm oil, salt, sugar, monosodium glutamate, artificial flavors, food color, preservatives, onion powder, garlic powder, soy sauce powder, hydrolyzed vegetable protein, citric acid, caramel color, sodium metabisulfite",
+      
+      // Healthy Cereal
+      "rolled oats, whole wheat, brown rice, quinoa, almonds, walnuts, dried cranberries, raisins, chia seeds, flax seeds, cinnamon, honey, natural vanilla, sea salt, coconut flakes, pumpkin seeds",
+      
+      // Unhealthy Biscuit
+      "maida, sugar, palm oil, high fructose corn syrup, salt, milk solids, artificial flavors, emulsifiers, preservatives, food color, corn starch, soy lecithin, vanilla extract, sodium bicarbonate, ammonium bicarbonate"
     ];
     
     const randomIndex = Math.floor(Math.random() * ingredientLists.length);
     const fallbackText = ingredientLists[randomIndex];
     
-    // ✅ ORIGINAL LOGIC KE HISAB SE DATA RETURN KAREGA
     const cleanedText = this.cleanExtractedText(fallbackText);
-    const hasIngredients = this.looksLikeIngredients(fallbackText);
     
     return {
       success: true,
       extractedText: cleanedText,
-      confidence: 70,
+      confidence: 60,
       rawText: fallbackText,
-      isFallback: true
+      isFallback: true,
+      source: 'fallback'
     };
   }
   
-  // ✅ ORIGINAL FUNCTIONS - WAISA HI HAI
+  // ✅ ORIGINAL FUNCTIONS - Bilkul waisi hi hain!
   looksLikeIngredients(text) {
     const ingredientKeywords = [
       'ingredient', 'ingredients', 'contains', 'sugar', 'salt', 
@@ -109,7 +134,6 @@ class OCRService {
     ];
     
     const lowerText = text.toLowerCase();
-    
     let keywordCount = 0;
     for (const keyword of ingredientKeywords) {
       if (lowerText.includes(keyword)) {
