@@ -16,14 +16,16 @@
       "dest": "/backend/server.js"
     },
     {
+      "src": "/style.css",
+      "dest": "/frontend/style.css"
+    },
+    {
+      "src": "/script.js",
+      "dest": "/frontend/script.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/frontend/index.html"
     }
-  ],
-  "functions": {
-    "backend/server.js": {
-      "maxDuration": 60,
-      "memory": 1024
-    }
-  }
+  ]
 }

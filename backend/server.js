@@ -1,4 +1,4 @@
-// backend/server.js - EXPRESS 5 FINAL WORKING
+// backend/server.js
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -9,49 +9,32 @@ dotenv.config();
 
 const app = express();
 
-// ============================================
-// CONNECT TO MONGODB
-// ============================================
+// Connect to MongoDB
 connectDB().catch(err => {
     console.error('❌ MongoDB Error:', err.message);
 });
 
-// ============================================
-// MIDDLEWARE
-// ============================================
+// Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// ============================================
-// STATIC FILES - PEHLE
-// ============================================
+// Static files
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// ============================================
-// IMPORT ROUTES
-// ============================================
+// Routes
 const authRoutes = require('./routes/authRoutes');
 const scanRoutes = require('./routes/scanRoutes');
 const userRoutes = require('./routes/userRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 
-// ============================================
-// USE ROUTES
-// ============================================
 app.use('/api/auth', authRoutes);
 app.use('/api/scan', scanRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/history', historyRoutes);
 
-// ============================================
-// SIMPLE FRONTEND ROUTES - NO WILDCARD
-// ============================================
+// Frontend routes
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
-});
-
-app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
@@ -59,16 +42,12 @@ app.get('/reset-password/:token', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// ============================================
-// ✅ 404 HANDLER - SAB KUCH FRONTEND PE BHEJO
-// ============================================
+// 404 handler - send index.html for all other routes
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// ============================================
-// ERROR HANDLING
-// ============================================
+// Error handler
 app.use((err, req, res, next) => {
     console.error('❌ Error:', err.message);
     res.status(err.status || 500).json({
@@ -77,7 +56,4 @@ app.use((err, req, res, next) => {
     });
 });
 
-// ============================================
-// EXPORT FOR VERCEL
-// ============================================
 module.exports = app;
