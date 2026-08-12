@@ -3,10 +3,14 @@
 // ============================================
 // API CONFIGURATION
 // ============================================
-// ============================================
-// API CONFIGURATION - VERCEL FIXED
-// ============================================
-const API_URL = '/api';
+const API_URL = (() => {
+  // Production (Vercel) - use relative path
+  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return '/api'; // Vercel handles /api routes
+  }
+  // Development (Local)
+  return 'http://localhost:5000/api';
+})();
 
 console.log('🔗 API URL:', API_URL);
 
