@@ -245,7 +245,8 @@ function logout() {
     const authContainerEl = document.getElementById('authContainer');
     authContainerEl.classList.add('active');
     authContainerEl.classList.remove('hidden');
-    authContainerEl.scrollTop = 0;
+    fitAuthCardToView();
+    requestAnimationFrame(fitAuthCardToView);
     document.getElementById('mainContainer').classList.remove('active');
     showPage('homePage');
     showToast('Logged out successfully', 'info');
@@ -263,7 +264,8 @@ function checkAuth() {
     } else {
         const authContainerEl = document.getElementById('authContainer');
         authContainerEl.classList.add('active');
-        authContainerEl.scrollTop = 0;
+        fitAuthCardToView();
+        requestAnimationFrame(fitAuthCardToView);
         document.getElementById('mainContainer').classList.remove('active');
     }
 }
@@ -279,6 +281,27 @@ function getAuthHeaders() {
     return {
         'Authorization': `Bearer ${token}`
     };
+}
+
+// ============================================
+// FIT AUTH CARD TO VIEW (login vs signup height)
+// ============================================
+// .auth-container is the scrollable element (overflow-y:auto in CSS).
+// A flat "scrollTop = 0" always shows the green header first, which cuts
+// off the bottom of taller forms (signup has more fields than login) on
+// short mobile screens. Instead we scroll just enough to bring the
+// .auth-card's top edge to the top of the viewport - login (short) needs
+// little/no scroll, signup (tall) needs more - computed from the *actual*
+// rendered height of whichever form is active, so it auto-adjusts per form
+// instead of using a hardcoded number.
+function fitAuthCardToView() {
+    const authContainer = document.getElementById('authContainer');
+    const authCard = document.querySelector('.auth-card');
+    if (!authContainer || !authCard) return;
+
+    const maxScroll = Math.max(0, authContainer.scrollHeight - authContainer.clientHeight);
+    const desiredScroll = Math.min(authCard.offsetTop, maxScroll);
+    authContainer.scrollTop = desiredScroll;
 }
 
 // ============================================
@@ -306,15 +329,8 @@ function showForgotPassword() {
         authTabs.style.display = 'none';
     }
 
-    const authContainer = document.getElementById('authContainer');
-    if (authContainer) {
-        authContainer.scrollTop = 0;
-    }
-    const authCard = document.querySelector('.auth-card');
-    if (authCard) {
-        authCard.scrollTop = 0;
-    }
-    window.scrollTo(0, 0);
+    fitAuthCardToView();
+    requestAnimationFrame(fitAuthCardToView);
 }
 
 function showResetPassword(token) {
@@ -360,23 +376,14 @@ function switchAuthTab(tabName) {
         targetTabBtn.classList.add('active');
     }
 
-    const authContainer = document.getElementById('authContainer');
-    if (authContainer) {
-        authContainer.scrollTop = 0;
-    }
-    const authCard = document.querySelector('.auth-card');
-    if (authCard) {
-        authCard.scrollTop = 0;
-    }
-    window.scrollTo(0, 0);
-
-    // .auth-container is the element that actually scrolls (it has
-    // overflow-y:auto in CSS), not window/.auth-card. Some mobile browsers
-    // also apply the scrollTop reset a frame late (after the slide-in
-    // animation/layout settles), so we force it again on the next frame.
-    requestAnimationFrame(() => {
-        if (authContainer) authContainer.scrollTop = 0;
-    });
+    // Scroll the actual amount needed to fit whichever form is now active -
+    // signup (taller) scrolls further up than login (shorter), computed
+    // fresh each time from the real rendered height, not a fixed 0.
+    fitAuthCardToView();
+    // display:block just got applied above, and the slide-in animation can
+    // still be settling layout on some mobile browsers, so re-run once more
+    // on the next frame to make sure the height we measured is final.
+    requestAnimationFrame(fitAuthCardToView);
 }
 
 // ============================================
