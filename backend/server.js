@@ -1,4 +1,4 @@
-// backend/server.js - EXPRESS 5 FINAL FIX
+// backend/server.js - EXPRESS 5 FINAL WORKING
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -24,6 +24,11 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ============================================
+// STATIC FILES - PEHLE
+// ============================================
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// ============================================
 // IMPORT ROUTES
 // ============================================
 const authRoutes = require('./routes/authRoutes');
@@ -40,14 +45,13 @@ app.use('/api/user', userRoutes);
 app.use('/api/history', historyRoutes);
 
 // ============================================
-// SERVE FRONTEND STATIC FILES
-// ============================================
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// ============================================
-// FRONTEND ROUTES - EXPRESS 5 FINAL FIX
+// SIMPLE FRONTEND ROUTES - NO WILDCARD
 // ============================================
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
@@ -55,9 +59,10 @@ app.get('/reset-password/:token', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// ✅ EXPRESS 5 COMPATIBLE WILDCARD
-// Use '/:path*' for Express 5
-app.get('/:path*', (req, res) => {
+// ============================================
+// ✅ 404 HANDLER - SAB KUCH FRONTEND PE BHEJO
+// ============================================
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
