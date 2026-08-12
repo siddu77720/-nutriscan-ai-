@@ -12,6 +12,14 @@
   ],
   "routes": [
     {
+      "src": "/reset-password",
+      "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/reset-password/(.*)",
+      "dest": "/frontend/index.html"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/backend/server.js"
     },
@@ -22,14 +30,6 @@
     {
       "src": "/script.js",
       "dest": "/frontend/script.js"
-    },
-    {
-      "src": "/reset-password",
-      "dest": "/frontend/index.html"
-    },
-    {
-      "src": "/reset-password/(.*)",
-      "dest": "/frontend/index.html"
     },
     {
       "src": "/(.*)",
