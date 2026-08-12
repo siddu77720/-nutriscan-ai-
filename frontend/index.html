@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <meta name="theme-color" content="#2E7D32">
+    <title>NutriScan AI - Scan Smart. Eat Better.</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Auth Container (Login/Signup) -->
+        <div id="authContainer" class="auth-container active">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo-icon">
+                        <i class="fas fa-apple-alt"></i>
+                    </div>
+                    <h1>NutriScan AI</h1>
+                    <p class="tagline">Scan Smart. Eat Better.</p>
+                    <div class="label-rule"></div>
+                </div>
+                
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="signup">Sign Up</button>
+                </div>
+                
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form active">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" placeholder="Email address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                    </div>
+                    <!-- FORGOT PASSWORD LINK ADDED -->
+                    <div style="text-align: right; margin-top: -12px; margin-bottom: 16px;">
+                        <a href="#" id="forgotPasswordLink" style="color: #2E7D32; text-decoration: none; font-size: 13px; cursor: pointer;">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="auth-btn">Login</button>
+                </form>
+                
+                <!-- Signup Form -->
+                <form id="signupForm" class="auth-form">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="signupName" placeholder="Full name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signupEmail" placeholder="Email address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signupConfirmPassword" placeholder="Confirm password" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Create Account</button>
+                </form>
+
+                <!-- FORGOT PASSWORD FORM -->
+                <form id="forgotPasswordForm" class="auth-form">
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <i class="fas fa-key" style="font-size: 40px; color: #2E7D32;"></i>
+                        <h3 style="margin: 8px 0 4px;">Forgot Password?</h3>
+                        <p style="color: #888; font-size: 13px;">Enter your email to reset password</p>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="forgotEmail" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Send Reset Link</button>
+                    <div style="text-align: center; margin-top: 12px;">
+                        <a href="#" id="backToLogin" style="color: #2E7D32; text-decoration: none; font-size: 14px; cursor: pointer;">
+                            <i class="fas fa-arrow-left"></i> Back to Login
+                        </a>
+                    </div>
+                </form>
+
+                <!-- ============================================================ -->
+                <!-- RESET PASSWORD FORM - FIXED: NO EYE ICON, ALWAYS VISIBLE      -->
+                <!-- ============================================================ -->
+                <form id="resetPasswordForm" class="auth-form">
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <i class="fas fa-lock" style="font-size: 40px; color: #2E7D32;"></i>
+                        <h3 style="margin: 8px 0 4px;">Reset Password</h3>
+                        <p style="color: #888; font-size: 13px;">Enter your new password</p>
+                    </div>
+                    
+                    <!-- NEW PASSWORD - NO EYE ICON, TYPE="text" = ALWAYS VISIBLE -->
+                    <div class="input-group" style="position: relative; margin-bottom: 20px;">
+                        <i class="fas fa-lock" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #888; z-index: 2;"></i>
+                        <input type="text" id="resetNewPassword" placeholder="New password (min 6 characters)" required style="width: 100%; height: 50px; padding: 12px 16px 12px 48px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 16px; background: white; box-sizing: border-box;">
+                        <!-- EYE ICON REMOVED ✅ -->
+                    </div>
+                    
+                    <!-- CONFIRM PASSWORD - NO EYE ICON, TYPE="text" = ALWAYS VISIBLE -->
+                    <div class="input-group" style="position: relative; margin-bottom: 20px;">
+                        <i class="fas fa-lock" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #888; z-index: 2;"></i>
+                        <input type="text" id="resetConfirmPassword" placeholder="Confirm new password" required style="width: 100%; height: 50px; padding: 12px 16px 12px 48px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 16px; background: white; box-sizing: border-box;">
+                        <!-- EYE ICON REMOVED ✅ -->
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">Reset Password</button>
+                    <div style="text-align: center; margin-top: 12px;">
+                        <a href="#" id="backToLoginFromReset" style="color: #2E7D32; text-decoration: none; font-size: 14px; cursor: pointer;">
+                            <i class="fas fa-arrow-left"></i> Back to Login
+                        </a>
+                    </div>
+                </form>
+                <!-- ============================================================ -->
+                <!-- END RESET PASSWORD FORM                                       -->
+                <!-- ============================================================ -->
+            </div>
+        </div>
+        
+        <!-- Main App Container -->
+        <div id="mainContainer" class="main-container">
+            <!-- Navbar -->
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <i class="fas fa-apple-alt"></i>
+                    <span>NutriScan AI</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="nav-btn" id="historyBtn">
+                        <i class="fas fa-history"></i>
+                        <span>History</span>
+                    </button>
+                    <button class="nav-btn" id="profileBtn">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Profile</span>
+                    </button>
+                    <button class="nav-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Main Content -->
+            <div id="mainContent" class="main-content">
+                <!-- Home Page -->
+                <div id="homePage" class="page active">
+                    <div class="hero-section">
+                        <h1>Welcome to NutriScan AI</h1>
+                        <div class="label-rule"></div>
+                        <p class="hero-subtitle">Your personal nutrition assistant</p>
+                        <div class="stats-card">
+                            <div class="stat">
+                                <i class="fas fa-camera"></i>
+                                <span>Scan Food Labels</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Get Health Scores</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-brain"></i>
+                                <span>AI Explanations</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons - NEW ORDER: Barcode First -->
+                    <div class="action-buttons">
+                        <button class="action-btn barcode" id="barcodeBtn" style="background: linear-gradient(135deg, #2196F3, #1976D2); color: white;">
+                            <i class="fas fa-barcode"></i>
+                            Scan Barcode
+                        </button>
+                        <button class="action-btn primary" id="uploadBtn">
+                            <i class="fas fa-upload"></i>
+                            Upload Image
+                        </button>
+                        <button class="action-btn secondary" id="cameraBtn">
+                            <i class="fas fa-camera"></i>
+                            Open Camera
+                        </button>
+                    </div>
+                    
+                    <input type="file" id="fileInput" accept="image/*" style="display: none">
+                    <input type="file" id="cameraInput" accept="image/*" style="display: none">
+                </div>
+                
+                <!-- Scan Page -->
+                <div id="scanPage" class="page">
+                    <div class="page-header">
+                        <button class="back-btn" onclick="showPage('homePage')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Scan Label</h2>
+                    </div>
+                    <div class="scan-container">
+                        <div class="image-preview" id="imagePreview">
+                            <img id="previewImage" alt="Preview">
+                        </div>
+                        <button class="analyze-btn" id="analyzeBtn">
+                            <i class="fas fa-microscope"></i>
+                            Analyze Ingredients
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Barcode Scan Page - Mobile Friendly -->
+                <div id="barcodePage" class="page">
+                    <div class="page-header">
+                        <button class="back-btn" id="barcodeBackBtn">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Scan Barcode</h2>
+                    </div>
+                    <div class="barcode-container">
+                        <div id="barcodeVideoContainer">
+                            <video id="barcodeVideo" playsinline autoplay></video>
+                            <div id="barcodeOverlay">
+                                <div>
+                                    <div class="corner-br"></div>
+                                    <div class="corner-bl"></div>
+                                </div>
+                            </div>
+                            <div id="barcodeStatus">📦 Looking for barcode...</div>
+                        </div>
+                        
+                        <div class="barcode-buttons">
+                            <button id="barcodeTorchBtn" class="barcode-btn torch">
+                                <i class="fas fa-lightbulb"></i> Torch
+                            </button>
+                            <button id="barcodeManualBtn" class="barcode-btn manual">
+                                <i class="fas fa-keyboard"></i> Manual
+                            </button>
+                            <button id="barcodeCloseBtn" class="barcode-btn close">
+                                <i class="fas fa-times"></i> Close
+                            </button>
+                        </div>
+                        
+                        <!-- Manual Barcode Input -->
+                        <div id="manualBarcodeInput">
+                            <input type="text" id="barcodeManualInput" placeholder="Enter barcode number..." inputmode="numeric">
+                            <button id="barcodeManualSubmit" class="search-btn">
+                                <i class="fas fa-search"></i> Search Product
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barcode Result Page -->
+                <div id="barcodeResultPage" class="page">
+                    <div class="page-header">
+                        <button class="back-btn" id="barcodeResultBackBtn">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Product Details</h2>
+                    </div>
+                    <div id="barcodeResultContent" class="result-content"></div>
+                </div>
+                
+                <!-- Result Page -->
+                <div id="resultPage" class="page">
+                    <div class="page-header">
+                        <button class="back-btn" onclick="showPage('homePage')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Analysis Result</h2>
+                    </div>
+                    <div id="resultContent" class="result-content"></div>
+                </div>
+                
+                <!-- History Page -->
+                <div id="historyPage" class="page">
+                    <div class="page-header">
+                        <button class="back-btn" onclick="showPage('homePage')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Scan History</h2>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                        <button id="clearHistoryBtn" class="clear-history-btn" style="background: #f44336; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;">
+                            <i class="fas fa-trash-alt"></i> Clear All
+                        </button>
+                    </div>
+                    
+                    <div id="historyList" class="history-list"></div>
+                </div>
+                
+                <!-- Profile Page -->
+                <div id="profilePage" class="page">
+                    <div class="page-header">
+                        <button class="back-btn" onclick="showPage('homePage')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Your Profile</h2>
+                    </div>
+                    <div class="profile-content">
+                        <div class="profile-info">
+                            <div class="avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <h3 id="userName">User Name</h3>
+                            <p id="userEmail">user@example.com</p>
+                        </div>
+                        
+                        <div class="health-conditions-section">
+                            <h3>Health Conditions</h3>
+                            <p class="section-note">Select any conditions that apply to you for personalized warnings</p>
+                            
+                            <div class="conditions-grid" id="conditionsGrid">
+                                <label class="condition-checkbox">
+                                    <input type="checkbox" value="diabetes">
+                                    <span><i class="fas fa-tint"></i> Diabetes / Sugar</span>
+                                </label>
+                                <label class="condition-checkbox">
+                                    <input type="checkbox" value="high bp">
+                                    <span><i class="fas fa-heartbeat"></i> High BP</span>
+                                </label>
+                                <label class="condition-checkbox">
+                                    <input type="checkbox" value="cholesterol">
+                                    <span><i class="fas fa-chart-line"></i> Cholesterol</span>
+                                </label>
+                                <label class="condition-checkbox">
+                                    <input type="checkbox" value="weight loss">
+                                    <span><i class="fas fa-weight-scale"></i> Weight Loss</span>
+                                </label>
+                                <label class="condition-checkbox">
+                                    <input type="checkbox" value="heart problems">
+                                    <span><i class="fas fa-heart"></i> Heart Problems</span>
+                                </label>
+                            </div>
+                            
+                            <button class="save-profile-btn" id="saveProfileBtn">
+                                <i class="fas fa-save"></i> Save Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Analyzing your food...</p>
+        </div>
+    </div>
+    
+    <!-- Barcode Loading Overlay -->
+    <div id="barcodeLoadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p id="barcodeLoadingText">Fetching product details...</p>
+        </div>
+    </div>
+
+    <!-- Password Reset Success Overlay -->
+    <div id="resetSuccessOverlay" class="reset-success-overlay" style="display: none;">
+        <div class="reset-success-card">
+            <div class="reset-success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>Password Reset Successful!</h2>
+            <div class="label-rule"></div>
+            <p>Your password has been changed. Go back to NutriScan AI and log in with your new password.</p>
+            <button type="button" id="goToLoginBtn" class="reset-success-btn">
+                <i class="fas fa-arrow-left"></i> Go to Login
+            </button>
+        </div>
+    </div>
+    
+    <script src="/script.js"></script>
+</body>
+</html>

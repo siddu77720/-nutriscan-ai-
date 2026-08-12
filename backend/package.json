@@ -1,0 +1,31 @@
+{
+  "name": "nutriscan-ai",
+  "version": "1.0.0",
+  "description": "AI-powered food nutrition scanner",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "vercel-build": "npm install"
+  },
+  "keywords": ["nutrition", "ai", "food", "scanner"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "firebase-admin": "^14.2.0",
+    "groq-sdk": "^1.1.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^7.8.0",
+    "multer": "^2.1.1",
+    "nodemailer": "^9.0.5",
+    "tesseract.js": "^7.0.0"
+  }
+}
