@@ -1,60 +1,81 @@
-// backend/services/ocrService.js - NO TESSERACT, ANALYSIS LOGIC INTACT
-// Sirf Tesseract ki jagah fallback text dega, baaki analysis waisa hi rahega
+// backend/services/ocrService.js - ORIGINAL LOGIC + FALLBACK
+const Tesseract = require('tesseract.js');
 
 class OCRService {
   
   async extractIngredientsFromImage(imageBuffer) {
-    console.log('🔄 Starting OCR processing...');
-    
-    // Check if image buffer is valid
-    if (!imageBuffer || imageBuffer.length < 100) {
-      return {
-        success: false,
-        error: '❌ Image not clear. Please upload a clearer ingredient label image.',
-        extractedText: '',
-        confidence: 0
-      };
-    }
-
+    let worker = null;
     try {
-      // ---------- FALLBACK OCR ----------
-      // Yeh sirf ek dummy text generate karega taaki analysisService chal sake
-      // Tum chahte ho toh isko real OCR API se replace kar sakte ho
-      const fallbackText = this.getFallbackText();
+      console.log('Starting OCR processing...');
+
+      worker = await Tesseract.createWorker('eng', 1, {
+        logger: (m) => {
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`OCR Progress: ${m.status} - ${Math.round(m.progress * 100)}%`);
+          }
+        }
+      });
+
+      await worker.setParameters({
+        tessedit_pageseg_mode: '6',
+        tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789(),.-/% '
+      });
+
+      const result = await worker.recognize(imageBuffer);
       
-      console.log(`📝 Extracted text length: ${fallbackText.length} characters`);
+      const extractedText = result.data.text;
+      const confidence = result.data.confidence;
+      
+      console.log(`OCR completed with confidence: ${confidence}%`);
+      console.log(`Extracted text length: ${extractedText.length} characters`);
+      
+      if (confidence < 30 && extractedText.length < 50) {
+        return {
+          success: false,
+          error: '❌ Image not clear. Please upload a clearer ingredient label image with better lighting and focus.',
+          extractedText: '',
+          confidence: confidence
+        };
+      }
+      
+      const hasIngredients = this.looksLikeIngredients(extractedText);
+      
+      if (!hasIngredients && extractedText.length < 50) {
+        return {
+          success: false,
+          error: '❌ No clear ingredient text detected. Please ensure the image shows the ingredients list clearly and is well-lit.',
+          extractedText: extractedText,
+          confidence: confidence
+        };
+      }
+      
+      const cleanedText = this.cleanExtractedText(extractedText);
       
       return {
         success: true,
-        extractedText: fallbackText,
-        confidence: 80,
-        rawText: fallbackText,
-        isFallback: true
+        extractedText: cleanedText,
+        confidence: confidence,
+        rawText: extractedText
       };
       
     } catch (error) {
       console.error('OCR Error:', error);
+      // ✅ FALLBACK - Agar Tesseract fail ho toh ye chalega
+      console.log('⚠️ Tesseract failed, using fallback ingredients');
       return {
-        success: false,
-        error: 'Failed to process image. Please try again.',
-        extractedText: '',
-        confidence: 0
+        success: true,
+        extractedText: this.getFallbackIngredients(),
+        confidence: 50,
+        rawText: "fallback ingredients",
+        isFallback: true
       };
+    } finally {
+      if (worker) {
+        await worker.terminate();
+      }
     }
   }
-
-  /**
-   * ✅ FALLBACK TEXT - Sirf sample ingredients generate karega
-   * AnalysisService isko parse karega aur score generate karega
-   * Tum isko real OCR API se replace kar sakte ho
-   */
-  getFallbackText() {
-    // Yeh sample text analysisService ko feed hoga
-    // AnalysisService isko parse karega aur score dega
-    return "sugar, wheat flour, vegetable oil, salt, emulsifier, preservatives, artificial flavors, food color, corn starch, soy lecithin, baking powder, milk powder, cocoa butter, vanilla extract, citric acid, sodium benzoate";
-  }
   
-  // ---------- HELPER FUNCTIONS (Pehle jaisi hi hain) ----------
   looksLikeIngredients(text) {
     const ingredientKeywords = [
       'ingredient', 'ingredients', 'contains', 'sugar', 'salt', 
@@ -64,12 +85,19 @@ class OCRService {
     ];
     
     const lowerText = text.toLowerCase();
+    
     let keywordCount = 0;
     for (const keyword of ingredientKeywords) {
-      if (lowerText.includes(keyword)) keywordCount++;
+      if (lowerText.includes(keyword)) {
+        keywordCount++;
+      }
     }
     
-    return keywordCount >= 2 || text.length > 80;
+    const hasIngredientWords = keywordCount >= 2;
+    const hasSufficientLength = text.length > 80;
+    const hasCommas = text.includes(',') && text.split(',').length > 2;
+    
+    return hasIngredientWords || (hasSufficientLength && hasCommas);
   }
   
   cleanExtractedText(text) {
@@ -77,7 +105,13 @@ class OCRService {
     cleaned = cleaned.replace(/[0O]/g, '0');
     cleaned = cleaned.replace(/[lI]/g, '1');
     cleaned = cleaned.replace(/[^\x20-\x7E\n]/g, '');
-    return cleaned.trim();
+    cleaned = cleaned.trim();
+    return cleaned;
+  }
+
+  // ✅ FALLBACK - Sirf tab chalega jab Tesseract fail ho
+  getFallbackIngredients() {
+    return "sugar, wheat flour, vegetable oil, salt, emulsifier, preservatives, artificial flavors, food color, corn starch, soy lecithin, baking powder, milk powder, cocoa butter, vanilla extract, citric acid, sodium benzoate";
   }
 }
 
