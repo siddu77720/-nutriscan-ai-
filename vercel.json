@@ -30,10 +30,6 @@
     {
       "src": "/script.js",
       "dest": "/frontend/script.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/frontend/index.html"
     }
   ]
 }
