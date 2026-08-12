@@ -1,4 +1,4 @@
-// backend/server.js - FIXED FOR EXPRESS 5
+// backend/server.js - EXPRESS 5 FIXED
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -32,7 +32,7 @@ const userRoutes = require('./routes/userRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 
 // ============================================
-// USE ROUTES - API ROUTES PEHLE
+// USE ROUTES
 // ============================================
 app.use('/api/auth', authRoutes);
 app.use('/api/scan', scanRoutes);
@@ -45,7 +45,7 @@ app.use('/api/history', historyRoutes);
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // ============================================
-// FRONTEND ROUTES - EXPRESS 5 COMPATIBLE
+// FRONTEND ROUTES
 // ============================================
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
@@ -55,7 +55,7 @@ app.get('/reset-password/:token', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// FIXED: Express 5 compatible wildcard route
+// ✅ EXPRESS 5 COMPATIBLE - Use '/*' not '*'
 app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
