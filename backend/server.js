@@ -1,11 +1,10 @@
-// backend/server.js - VERCEL DEPLOYMENT READY
+// backend/server.js - FIXED FOR EXPRESS 5
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const connectDB = require('./config/db');
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -14,23 +13,15 @@ const app = express();
 // CONNECT TO MONGODB
 // ============================================
 connectDB().catch(err => {
-    console.error('MongoDB connection error:', err);
+    console.error('❌ MongoDB Error:', err.message);
 });
 
 // ============================================
 // MIDDLEWARE
 // ============================================
-app.use(cors({
-    origin: '*',
-    credentials: true
-}));
+app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// ============================================
-// STATIC FILES
-// ============================================
-app.use(express.static(path.join(__dirname, '../frontend')));
 
 // ============================================
 // IMPORT ROUTES
@@ -41,7 +32,7 @@ const userRoutes = require('./routes/userRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 
 // ============================================
-// USE ROUTES
+// USE ROUTES - API ROUTES PEHLE
 // ============================================
 app.use('/api/auth', authRoutes);
 app.use('/api/scan', scanRoutes);
@@ -49,7 +40,12 @@ app.use('/api/user', userRoutes);
 app.use('/api/history', historyRoutes);
 
 // ============================================
-// FRONTEND ROUTES
+// SERVE FRONTEND STATIC FILES
+// ============================================
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// ============================================
+// FRONTEND ROUTES - EXPRESS 5 COMPATIBLE
 // ============================================
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
@@ -59,21 +55,16 @@ app.get('/reset-password/:token', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-app.get('*', (req, res) => {
+// FIXED: Express 5 compatible wildcard route
+app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 // ============================================
-// ERROR HANDLING MIDDLEWARE
+// ERROR HANDLING
 // ============================================
 app.use((err, req, res, next) => {
-    console.error('❌ Server Error:', err.message);
-    console.error('Stack:', err.stack);
-    
-    if (res.headersSent) {
-        return next(err);
-    }
-    
+    console.error('❌ Error:', err.message);
     res.status(err.status || 500).json({
         success: false,
         error: err.message || 'Internal server error'
