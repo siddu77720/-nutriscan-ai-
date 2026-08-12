@@ -242,8 +242,10 @@ function logout() {
     localStorage.removeItem('nutriscan_user');
     currentUser = null;
     authToken = null;
-    document.getElementById('authContainer').classList.add('active');
-    document.getElementById('authContainer').classList.remove('hidden');
+    const authContainerEl = document.getElementById('authContainer');
+    authContainerEl.classList.add('active');
+    authContainerEl.classList.remove('hidden');
+    authContainerEl.scrollTop = 0;
     document.getElementById('mainContainer').classList.remove('active');
     showPage('homePage');
     showToast('Logged out successfully', 'info');
@@ -259,7 +261,9 @@ function checkAuth() {
         showMainApp();
         loadUserProfile();
     } else {
-        document.getElementById('authContainer').classList.add('active');
+        const authContainerEl = document.getElementById('authContainer');
+        authContainerEl.classList.add('active');
+        authContainerEl.scrollTop = 0;
         document.getElementById('mainContainer').classList.remove('active');
     }
 }
@@ -302,6 +306,10 @@ function showForgotPassword() {
         authTabs.style.display = 'none';
     }
 
+    const authContainer = document.getElementById('authContainer');
+    if (authContainer) {
+        authContainer.scrollTop = 0;
+    }
     const authCard = document.querySelector('.auth-card');
     if (authCard) {
         authCard.scrollTop = 0;
@@ -352,11 +360,23 @@ function switchAuthTab(tabName) {
         targetTabBtn.classList.add('active');
     }
 
+    const authContainer = document.getElementById('authContainer');
+    if (authContainer) {
+        authContainer.scrollTop = 0;
+    }
     const authCard = document.querySelector('.auth-card');
     if (authCard) {
         authCard.scrollTop = 0;
     }
     window.scrollTo(0, 0);
+
+    // .auth-container is the element that actually scrolls (it has
+    // overflow-y:auto in CSS), not window/.auth-card. Some mobile browsers
+    // also apply the scrollTop reset a frame late (after the slide-in
+    // animation/layout settles), so we force it again on the next frame.
+    requestAnimationFrame(() => {
+        if (authContainer) authContainer.scrollTop = 0;
+    });
 }
 
 // ============================================
