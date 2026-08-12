@@ -16,8 +16,24 @@
       "dest": "/backend/server.js"
     },
     {
-      "src": "/(.*)",
+      "src": "/style.css",
+      "dest": "/frontend/style.css"
+    },
+    {
+      "src": "/script.js",
+      "dest": "/frontend/script.js"
+    },
+    {
+      "src": "/reset-password",
       "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/reset-password/(.*)",
+      "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/backend/server.js"
     }
   ]
 }
