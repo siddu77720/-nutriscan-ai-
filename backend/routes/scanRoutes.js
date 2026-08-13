@@ -306,5 +306,36 @@ router.post('/barcode/search', async (req, res) => {
     });
   }
 });
+// ============================================
+// SEARCH PRODUCT BY NAME
+// ============================================
+router.post('/barcode/search', async (req, res) => {
+  try {
+    const { query } = req.body;
+    
+    if (!query || query.length < 2) {
+      return res.status(400).json({
+        success: false,
+        error: 'Search query is required (min 2 characters)'
+      });
+    }
+    
+    console.log(`🔍 Searching products for: ${query}`);
+    
+    const results = await barcodeService.searchProductByName(query);
+    
+    res.json({
+      success: true,
+      results: results
+    });
+    
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Search failed: ' + error.message
+    });
+  }
+});
 
 module.exports = router;
