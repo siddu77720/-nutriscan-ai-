@@ -13,79 +13,6 @@ const API_URL = (() => {
 })();
 
 console.log('🔗 API URL:', API_URL);
-// ============================================
-// SEARCH PRODUCT BY NAME - FUNCTIONS
-// ============================================
-
-async function searchProductByName() {
-    const query = document.getElementById('productSearchInput').value.trim();
-    
-    if (!query || query.length < 2) {
-        showToast('Please enter at least 2 characters', 'error');
-        return;
-    }
-
-    const token = localStorage.getItem('nutriscan_token');
-    if (!token) {
-        showToast('Please login first', 'error');
-        return;
-    }
-
-    showLoading();
-
-    try {
-        const response = await fetch(`${API_URL}/scan/barcode/search`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ query })
-        });
-
-        const data = await response.json();
-        hideLoading();
-
-        if (data.success && data.results && data.results.length > 0) {
-            displaySearchResults(data.results);
-        } else {
-            showToast('No products found. Try a different name.', 'info');
-            document.getElementById('searchResults').style.display = 'none';
-        }
-    } catch (error) {
-        hideLoading();
-        showToast('Search failed. Please try again.', 'error');
-    }
-}
-
-function displaySearchResults(results) {
-    const container = document.getElementById('searchResults');
-    container.style.display = 'block';
-    
-    let html = `<div style="background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">`;
-    html += `<h4 style="margin: 0 0 12px 0; font-size: 16px;">🔍 Search Results</h4>`;
-    
-    results.slice(0, 5).forEach((product, index) => {
-        const scoreColor = product.score >= 7 ? '#4CAF50' : product.score >= 4 ? '#FF9800' : '#F44336';
-        html += `
-            <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: ${index < results.length - 1 ? '1px solid #f0f0f0' : 'none'}; cursor: pointer;" 
-                 onclick="fetchProductByBarcode('${product.barcode}')">
-                ${product.image ? `<img src="${product.image}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px;">` : `<div style="width: 40px; height: 40px; background: #e8e8e8; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-box" style="color: #888;"></i></div>`}
-                <div style="flex: 1;">
-                    <div style="font-weight: 600; font-size: 14px;">${product.name}</div>
-                    <div style="font-size: 12px; color: #888;">${product.brand}</div>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-size: 18px; font-weight: 700; color: ${scoreColor};">${product.score}/10</div>
-                    <div style="font-size: 10px; color: #888;">Score</div>
-                </div>
-            </div>
-        `;
-    });
-    
-    html += `</div>`;
-    container.innerHTML = html;
-}
 
 let currentUser = null;
 let authToken = null;
@@ -2599,20 +2526,106 @@ function initEventListeners() {
     
     // Barcode Manual Button Toggle
     document.getElementById('barcodeManualBtn').addEventListener('click', () => {
-    // ... existing code ...
-});
-
-// ✅ SEARCH BY NAME - EVENT LISTENERS
-document.getElementById('productSearchBtn').addEventListener('click', searchProductByName);
-
-document.getElementById('productSearchInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        searchProductByName();
-    }
-});
-
-// Clear History
-const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        const manualInput = document.getElementById('manualBarcodeInput');
+        let overlay = document.getElementById('barcodeOverlay');
+        const container = document.getElementById('barcodeVideoContainer');
+        const status = document.getElementById('barcodeStatus');
+        
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'barcodeOverlay';
+            if (container) {
+                container.appendChild(overlay);
+            }
+        }
+        
+        if (manualInput.style.display === 'none' || manualInput.style.display === '') {
+            if (barcodeScanner && isBarcodeScannerActive) {
+                try {
+                    barcodeScanner.stop();
+                    isBarcodeScannerActive = false;
+                } catch(err) {}
+            }
+            
+            manualInput.style.display = 'block';
+            document.getElementById('barcodeManualInput').focus();
+            
+            if (overlay) {
+                overlay.classList.add('manual');
+                overlay.style.display = 'flex';
+                overlay.style.alignItems = 'center';
+                overlay.style.justifyContent = 'center';
+                overlay.style.position = 'absolute';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.right = '0';
+                overlay.style.bottom = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '100%';
+                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
+                overlay.style.backdropFilter = 'blur(16px)';
+                overlay.style.webkitBackdropFilter = 'blur(16px)';
+                overlay.style.zIndex = '10';
+                overlay.style.cursor = 'pointer';
+                overlay.style.pointerEvents = 'auto';
+                overlay.style.borderRadius = '16px';
+                overlay.style.margin = '0';
+                overlay.style.padding = '0';
+                overlay.style.opacity = '1';
+                
+                overlay.innerHTML = `
+                    <div class="overlay-card">
+                        <div class="orb1"></div>
+                        <div class="orb2"></div>
+                        <div class="overlay-icon">
+                            <i class="fas fa-keyboard"></i>
+                        </div>
+                        <h2 class="overlay-title">Manual Entry</h2>
+                        <p class="overlay-sub">
+                            <i class="fas fa-arrow-up"></i>
+                            Tap to switch to scan
+                        </p>
+                    </div>
+                `;
+                
+                overlay.onclick = function(e) {
+                    if (e.target.closest('#manualBarcodeInput')) return;
+                    manualInput.style.display = 'none';
+                    overlay.classList.remove('manual');
+                    startBarcodeScanner();
+                };
+            }
+            
+            if (status) {
+                status.textContent = '✏️ Enter barcode manually or tap overlay to scan';
+                status.style.background = 'rgba(255, 152, 0, 0.9)';
+                status.style.position = 'absolute';
+                status.style.bottom = '20px';
+                status.style.left = '50%';
+                status.style.transform = 'translateX(-50%)';
+                status.style.zIndex = '20';
+                status.style.padding = '10px 24px';
+                status.style.borderRadius = '50px';
+                status.style.fontSize = '14px';
+                status.style.fontWeight = '500';
+                status.style.maxWidth = '90%';
+                status.style.whiteSpace = 'nowrap';
+                status.style.overflow = 'hidden';
+                status.style.textOverflow = 'ellipsis';
+                status.style.display = 'block';
+            }
+            
+            document.getElementById('barcodeManualBtn').innerHTML = '<i class="fas fa-camera"></i> Scan';
+        } else {
+            manualInput.style.display = 'none';
+            overlay.classList.remove('manual');
+            showOverlay();
+            document.getElementById('barcodeManualBtn').innerHTML = '<i class="fas fa-keyboard"></i> Manual';
+        }
+    });
+    
+    // Clear History
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
     if (clearHistoryBtn) {
         clearHistoryBtn.addEventListener('click', () => {
             const modal = document.createElement('div');
