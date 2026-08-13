@@ -1,4 +1,4 @@
-// backend/server.js - With connection check middleware
+// backend/server.js - FIXED
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -10,8 +10,9 @@ dotenv.config();
 const app = express();
 
 // ============================================
-// CONNECT TO MONGODB ON STARTUP
+// ✅ CONNECT TO MONGODB ON STARTUP (WITH RETRY)
 // ============================================
+// connectDB() already has retry logic, just call it
 connectDB().catch(err => {
     console.error('❌ Startup MongoDB Error:', err.message);
 });

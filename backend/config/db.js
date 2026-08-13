@@ -1,7 +1,6 @@
-// backend/config/db.js - PERMANENT FIX
+// backend/config/db.js - COMPLETE FIX
 const mongoose = require('mongoose');
 
-// ✅ Mongoose connection options
 const connectionOptions = {
     serverSelectionTimeoutMS: 30000,
     socketTimeoutMS: 60000,
@@ -14,16 +13,17 @@ const connectionOptions = {
     heartbeatFrequencyMS: 10000,
 };
 
-// ✅ Connection state check
-const isConnected = () => mongoose.connection.readyState === 1;
+// ✅ CONNECTION STATE CHECK
+const isConnected = () => {
+    return mongoose.connection.readyState === 1;
+};
 
-// ✅ Connect with retry
+// ✅ CONNECT WITH RETRY
 const connectDB = async (retries = 5, delay = 5000) => {
     let lastError;
     
     for (let i = 0; i < retries; i++) {
         try {
-            // If already connected, return
             if (isConnected()) {
                 console.log('✅ MongoDB already connected');
                 return mongoose.connection;
@@ -49,7 +49,7 @@ const connectDB = async (retries = 5, delay = 5000) => {
     throw lastError;
 };
 
-// ✅ Event listeners (once)
+// ✅ Event listeners
 mongoose.connection.on('error', (err) => {
     console.error('❌ MongoDB connection error:', err);
 });
