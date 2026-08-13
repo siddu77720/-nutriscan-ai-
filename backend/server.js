@@ -1,39 +1,42 @@
-// backend/server.js - SIRF RESET ROUTE ADD KIYA + RETRY LOGIC
+// backend/server.js - With connection check middleware
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
-const connectDB = require('./config/db');
+const { connectDB, isConnected } = require('./config/db');
 
 dotenv.config();
 
 const app = express();
 
 // ============================================
-// CONNECT TO MONGODB WITH RETRY
+// CONNECT TO MONGODB ON STARTUP
 // ============================================
-const connectWithRetry = async (retries = 5, delay = 5000) => {
-    for (let i = 0; i < retries; i++) {
-        try {
-            await connectDB();
-            console.log(`✅ MongoDB connected successfully`);
-            return;
-        } catch (error) {
-            console.error(`❌ Connection attempt ${i + 1} failed: ${error.message}`);
-            if (i === retries - 1) {
-                console.error('❌ All retry attempts failed');
-                throw error;
-            }
-            console.log(`⏳ Retrying in ${delay/1000} seconds...`);
-            await new Promise(resolve => setTimeout(resolve, delay));
+connectDB().catch(err => {
+    console.error('❌ Startup MongoDB Error:', err.message);
+});
+
+// ============================================
+// ✅ MIDDLEWARE: Check DB connection before each request
+// ============================================
+const ensureDbConnection = async (req, res, next) => {
+    try {
+        if (!isConnected()) {
+            console.log('⚠️ DB disconnected, reconnecting...');
+            await connectDB(3, 2000);
         }
+        next();
+    } catch (error) {
+        console.error('❌ DB connection failed:', error.message);
+        res.status(503).json({
+            success: false,
+            error: 'Service temporarily unavailable. Please try again.'
+        });
     }
 };
 
-// Use retry logic
-connectWithRetry().catch(err => {
-    console.error('❌ Failed to connect to MongoDB:', err.message);
-});
+// Apply to all API routes
+app.use('/api', ensureDbConnection);
 
 // ============================================
 // MIDDLEWARE
@@ -59,7 +62,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/history', historyRoutes);
 
 // ============================================
-// FRONTEND ROUTES - Reset route pehle define karo
+// FRONTEND ROUTES
 // ============================================
 app.get('/reset-password', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
@@ -73,7 +76,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
-// 404 handler - send index.html for all other routes
+// 404 handler
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });

@@ -1,40 +1,65 @@
-// backend/config/db.js - MONGODB ATLAS READY WITH RETRY
+// backend/config/db.js - PERMANENT FIX
 const mongoose = require('mongoose');
 
-const connectDB = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI, {
-            serverSelectionTimeoutMS: 30000,  // 10s se 30s
-            socketTimeoutMS: 60000,           // 45s se 60s
-            family: 4,                        // IPv4 force
-            maxPoolSize: 20,                 // Connection pool
-            minPoolSize: 5,
-            retryWrites: true,
-            retryReads: true,
-            connectTimeoutMS: 30000,
-            heartbeatFrequencyMS: 10000,
-        });
-        console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-        console.log(`📊 Connection pool size: ${conn.connection.options.maxPoolSize}`);
-        
-        // Connection event listeners for debugging
-        mongoose.connection.on('error', (err) => {
-            console.error('❌ MongoDB connection error:', err);
-        });
-        
-        mongoose.connection.on('disconnected', () => {
-            console.log('⚠️ MongoDB disconnected, attempting to reconnect...');
-        });
-        
-        mongoose.connection.on('reconnected', () => {
-            console.log('✅ MongoDB reconnected');
-        });
-        
-        return conn;
-    } catch (error) {
-        console.error(`❌ MongoDB Error: ${error.message}`);
-        throw error;
-    }
+// ✅ Mongoose connection options
+const connectionOptions = {
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 60000,
+    family: 4,
+    maxPoolSize: 20,
+    minPoolSize: 5,
+    retryWrites: true,
+    retryReads: true,
+    connectTimeoutMS: 30000,
+    heartbeatFrequencyMS: 10000,
 };
 
-module.exports = connectDB;
+// ✅ Connection state check
+const isConnected = () => mongoose.connection.readyState === 1;
+
+// ✅ Connect with retry
+const connectDB = async (retries = 5, delay = 5000) => {
+    let lastError;
+    
+    for (let i = 0; i < retries; i++) {
+        try {
+            // If already connected, return
+            if (isConnected()) {
+                console.log('✅ MongoDB already connected');
+                return mongoose.connection;
+            }
+            
+            const conn = await mongoose.connect(process.env.MONGODB_URI, connectionOptions);
+            console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+            console.log(`📊 Connection pool size: ${conn.connection.options.maxPoolSize}`);
+            return conn;
+            
+        } catch (error) {
+            lastError = error;
+            console.error(`❌ Connection attempt ${i + 1} failed: ${error.message}`);
+            
+            if (i < retries - 1) {
+                console.log(`⏳ Retrying in ${delay/1000} seconds...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+    }
+    
+    console.error(`❌ All ${retries} retry attempts failed`);
+    throw lastError;
+};
+
+// ✅ Event listeners (once)
+mongoose.connection.on('error', (err) => {
+    console.error('❌ MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.log('⚠️ MongoDB disconnected');
+});
+
+mongoose.connection.on('reconnected', () => {
+    console.log('✅ MongoDB reconnected');
+});
+
+module.exports = { connectDB, isConnected };

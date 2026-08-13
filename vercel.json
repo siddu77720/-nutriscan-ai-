@@ -35,5 +35,11 @@
       "src": "/(.*)",
       "dest": "/backend/server.js"
     }
-  ]
+  ],
+  "functions": {
+    "backend/server.js": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  }
 }

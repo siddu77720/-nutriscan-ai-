@@ -1,14 +1,21 @@
-// backend/controllers/authController.js
+// backend/controllers/authController.js - WITH CONNECTION CHECK
 const User = require('../models/User');
 const { generateToken } = require('../middleware/auth');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const { isConnected, connectDB } = require('../config/db');
 
 // ============================================
 // REGISTER - Sign Up
 // ============================================
 exports.register = async (req, res) => {
   try {
+    // ✅ Check DB connection first
+    if (!isConnected()) {
+      console.log('⚠️ DB not connected, reconnecting...');
+      await connectDB(3, 2000);
+    }
+
     const { name, email, password } = req.body;
 
     // Check if user already exists
@@ -53,6 +60,13 @@ exports.register = async (req, res) => {
 
   } catch (error) {
     console.error('Register Error:', error);
+    // ✅ Better error response for DB issues
+    if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+      return res.status(503).json({
+        success: false,
+        error: 'Service temporarily unavailable. Please try again.'
+      });
+    }
     res.status(500).json({
       success: false,
       error: error.message || 'Registration failed'
@@ -65,6 +79,12 @@ exports.register = async (req, res) => {
 // ============================================
 exports.login = async (req, res) => {
   try {
+    // ✅ Check DB connection first
+    if (!isConnected()) {
+      console.log('⚠️ DB not connected, reconnecting...');
+      await connectDB(3, 2000);
+    }
+
     const { email, password } = req.body;
 
     // Find user with password
@@ -108,6 +128,12 @@ exports.login = async (req, res) => {
 
   } catch (error) {
     console.error('Login Error:', error);
+    if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+      return res.status(503).json({
+        success: false,
+        error: 'Service temporarily unavailable. Please try again.'
+      });
+    }
     res.status(500).json({
       success: false,
       error: error.message || 'Login failed'
@@ -120,6 +146,12 @@ exports.login = async (req, res) => {
 // ============================================
 exports.getMe = async (req, res) => {
   try {
+    // ✅ Check DB connection first
+    if (!isConnected()) {
+      console.log('⚠️ DB not connected, reconnecting...');
+      await connectDB(3, 2000);
+    }
+
     const user = await User.findById(req.user.id);
     
     res.json({
@@ -134,6 +166,13 @@ exports.getMe = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('GetMe Error:', error);
+    if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+      return res.status(503).json({
+        success: false,
+        error: 'Service temporarily unavailable. Please try again.'
+      });
+    }
     res.status(500).json({
       success: false,
       error: error.message
@@ -146,6 +185,12 @@ exports.getMe = async (req, res) => {
 // ============================================
 exports.forgotPassword = async (req, res) => {
   try {
+    // ✅ Check DB connection first
+    if (!isConnected()) {
+      console.log('⚠️ DB not connected, reconnecting...');
+      await connectDB(3, 2000);
+    }
+
     const { email } = req.body;
 
     const user = await User.findOne({ email: email.toLowerCase() });
@@ -210,6 +255,12 @@ exports.forgotPassword = async (req, res) => {
 
   } catch (error) {
     console.error('Forgot Password Error:', error);
+    if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+      return res.status(503).json({
+        success: false,
+        error: 'Service temporarily unavailable. Please try again.'
+      });
+    }
     res.status(500).json({
       success: false,
       error: error.message || 'Failed to send reset email'
@@ -222,6 +273,12 @@ exports.forgotPassword = async (req, res) => {
 // ============================================
 exports.resetPassword = async (req, res) => {
   try {
+    // ✅ Check DB connection first
+    if (!isConnected()) {
+      console.log('⚠️ DB not connected, reconnecting...');
+      await connectDB(3, 2000);
+    }
+
     const { token } = req.params;
     const { password } = req.body;
 
@@ -267,6 +324,12 @@ exports.resetPassword = async (req, res) => {
 
   } catch (error) {
     console.error('Reset Password Error:', error);
+    if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+      return res.status(503).json({
+        success: false,
+        error: 'Service temporarily unavailable. Please try again.'
+      });
+    }
     res.status(500).json({
       success: false,
       error: error.message || 'Password reset failed'
@@ -279,6 +342,12 @@ exports.resetPassword = async (req, res) => {
 // ============================================
 exports.updateProfile = async (req, res) => {
   try {
+    // ✅ Check DB connection first
+    if (!isConnected()) {
+      console.log('⚠️ DB not connected, reconnecting...');
+      await connectDB(3, 2000);
+    }
+
     const { name, healthConditions, customConditions } = req.body;
     
     const user = await User.findById(req.user.id);
@@ -303,6 +372,12 @@ exports.updateProfile = async (req, res) => {
 
   } catch (error) {
     console.error('Update Profile Error:', error);
+    if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+      return res.status(503).json({
+        success: false,
+        error: 'Service temporarily unavailable. Please try again.'
+      });
+    }
     res.status(500).json({
       success: false,
       error: error.message || 'Profile update failed'
@@ -315,6 +390,12 @@ exports.updateProfile = async (req, res) => {
 // ============================================
 exports.changePassword = async (req, res) => {
   try {
+    // ✅ Check DB connection first
+    if (!isConnected()) {
+      console.log('⚠️ DB not connected, reconnecting...');
+      await connectDB(3, 2000);
+    }
+
     const { currentPassword, newPassword } = req.body;
 
     if (!currentPassword || !newPassword) {
@@ -351,6 +432,12 @@ exports.changePassword = async (req, res) => {
 
   } catch (error) {
     console.error('Change Password Error:', error);
+    if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
+      return res.status(503).json({
+        success: false,
+        error: 'Service temporarily unavailable. Please try again.'
+      });
+    }
     res.status(500).json({
       success: false,
       error: error.message || 'Password change failed'
