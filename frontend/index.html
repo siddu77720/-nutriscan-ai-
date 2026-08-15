@@ -10,9 +10,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Ambient floating leaves & particles (decorative, purely CSS-driven) -->
+    <div class="leaves-bg" aria-hidden="true">
+        <span class="leaf-particle leaf-1"><i class="fas fa-leaf"></i></span>
+        <span class="leaf-particle leaf-2"><i class="fas fa-leaf"></i></span>
+        <span class="leaf-particle dot dot-1"></span>
+        <span class="leaf-particle leaf-3"><i class="fas fa-leaf"></i></span>
+        <span class="leaf-particle dot dot-2"></span>
+        <span class="leaf-particle leaf-4"><i class="fas fa-leaf"></i></span>
+        <span class="leaf-particle dot dot-3"></span>
+        <span class="leaf-particle leaf-5"><i class="fas fa-leaf"></i></span>
+        <span class="leaf-particle leaf-6"><i class="fas fa-leaf"></i></span>
+        <span class="leaf-particle dot dot-4"></span>
+    </div>
+
     <div id="app">
+        <!-- Splash / Intro Screen -->
+        <div id="splashScreen" class="splash-screen active">
+            <div class="splash-content">
+                <div class="logo-icon splash-logo">
+                    <i class="fas fa-apple-alt"></i>
+                </div>
+                <h1>NutriScan AI</h1>
+                <p class="tagline">Scan Smart. Eat Better.</p>
+                <div class="label-rule"></div>
+                <p class="splash-desc">AI-powered nutrition analysis for a healthier you.</p>
+            </div>
+            <button type="button" id="getStartedBtn" class="auth-btn splash-cta">
+                Get Started <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
         <!-- Auth Container (Login/Signup) -->
-        <div id="authContainer" class="auth-container active">
+        <div id="authContainer" class="auth-container">
             <div class="auth-card">
                 <div class="auth-header">
                     <div class="logo-icon">
@@ -40,7 +70,7 @@
                     </div>
                     <!-- FORGOT PASSWORD LINK ADDED -->
                     <div style="text-align: right; margin-top: -12px; margin-bottom: 16px;">
-                        <a href="#" id="forgotPasswordLink" style="color: #2E7D32; text-decoration: none; font-size: 13px; cursor: pointer;">Forgot Password?</a>
+                        <a href="#" id="forgotPasswordLink" class="forgot-link">Forgot Password?</a>
                     </div>
                     <button type="submit" class="auth-btn">Login</button>
                 </form>
@@ -148,8 +178,9 @@
                     <i class="fas fa-clock-rotate-left"></i>
                     <span>History</span>
                 </button>
-                <button type="button" class="bottom-nav-fab" onclick="showPage('homePage')" aria-label="Scan food">
-                    <i class="fas fa-barcode"></i>
+                <button type="button" class="bottom-nav-fab" id="navScanFab" aria-label="Scan food">
+                    <span class="fab-circle"><i class="fas fa-barcode"></i></span>
+                    <span class="fab-label">Scan</span>
                 </button>
                 <button type="button" class="bottom-nav-btn" id="profileBtn" data-page="profilePage">
                     <i class="fas fa-user"></i>
@@ -190,7 +221,10 @@
                                 <circle class="ring-progress" id="homeScoreRingProgress" cx="50" cy="50" r="42"
                                     stroke-dasharray="264" stroke-dashoffset="264"></circle>
                             </svg>
-                            <div class="score-ring-label"><span id="homeAvgScore">–</span><small>/10</small></div>
+                            <div class="score-ring-label">
+                                <span id="homeAvgScore" class="ring-score-num">–</span>
+                                <span class="ring-score-denom">/10</span>
+                            </div>
                         </div>
                         <div class="overview-copy">
                             <p class="overview-eyebrow" id="homeGreetingEyebrow">Welcome back</p>
@@ -384,7 +418,172 @@
                                 <i class="fas fa-save"></i> Save Profile
                             </button>
                         </div>
+
+                        <div class="account-list">
+                            <button type="button" class="account-row" id="goToSettingsBtn">
+                                <span class="account-row-icon"><i class="fas fa-gear"></i></span>
+                                <span class="account-row-label">Settings</span>
+                                <i class="fas fa-chevron-right account-row-chev"></i>
+                            </button>
+                            <button type="button" class="account-row" id="goToHelpBtn">
+                                <span class="account-row-icon"><i class="fas fa-circle-question"></i></span>
+                                <span class="account-row-label">Help &amp; Support</span>
+                                <i class="fas fa-chevron-right account-row-chev"></i>
+                            </button>
+                            <button type="button" class="account-row danger" id="profileLogoutBtn">
+                                <span class="account-row-icon"><i class="fas fa-arrow-right-from-bracket"></i></span>
+                                <span class="account-row-label">Logout</span>
+                                <i class="fas fa-chevron-right account-row-chev"></i>
+                            </button>
+                        </div>
                     </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settingsPage" class="page">
+                    <div class="page-header">
+                        <button class="back-btn" onclick="showPage('profilePage')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Settings</h2>
+                    </div>
+                    <div class="settings-content">
+                        <div class="settings-card">
+                            <h3><i class="fas fa-lock"></i> Change Password</h3>
+                            <form id="changePasswordForm">
+                                <div class="input-group">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="currentPasswordInput" placeholder="Current password" required>
+                                </div>
+                                <div class="input-group">
+                                    <i class="fas fa-key"></i>
+                                    <input type="password" id="newPasswordInput" placeholder="New password (min 6 characters)" required>
+                                </div>
+                                <div class="input-group">
+                                    <i class="fas fa-key"></i>
+                                    <input type="password" id="confirmNewPasswordInput" placeholder="Confirm new password" required>
+                                </div>
+                                <button type="submit" class="auth-btn" id="changePasswordBtn">Update Password</button>
+                            </form>
+                        </div>
+
+                        <div class="settings-card">
+                            <h3><i class="fas fa-info-circle"></i> About</h3>
+                            <div class="settings-row" id="settingsAboutBtn">
+                                <span>About NutriScan AI</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="settings-row" id="settingsPrivacyBtn">
+                                <span>Privacy Policy</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="settings-row" id="settingsTermsBtn">
+                                <span>Terms of Use</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="settings-row no-border">
+                                <span>App Version</span>
+                                <span class="settings-value">1.0.0</span>
+                            </div>
+                        </div>
+
+                        <button type="button" class="account-row danger settings-logout" id="settingsLogoutBtn">
+                            <span class="account-row-icon"><i class="fas fa-arrow-right-from-bracket"></i></span>
+                            <span class="account-row-label">Logout</span>
+                            <i class="fas fa-chevron-right account-row-chev"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Help & Support Page -->
+                <div id="helpPage" class="page">
+                    <div class="page-header">
+                        <button class="back-btn" onclick="showPage('profilePage')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Help &amp; Support</h2>
+                    </div>
+                    <div class="help-content">
+                        <a href="mailto:nutriscana@gmail.com" class="contact-card">
+                            <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+                            <span class="contact-body">
+                                <span class="contact-title">Contact Support</span>
+                                <span class="contact-email">nutriscana@gmail.com</span>
+                            </span>
+                            <i class="fas fa-arrow-up-right-from-square contact-arrow"></i>
+                        </a>
+
+                        <div class="home-section-header help-section-header">
+                            <h3>Frequently Asked Questions</h3>
+                        </div>
+                        <div class="faq-list" id="faqList">
+                            <div class="faq-item">
+                                <button type="button" class="faq-question">
+                                    <span>How does NutriScan AI calculate the health score?</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="faq-answer">
+                                    <p>We read the ingredients list (via barcode lookup or by scanning the label) and score it out of 10 based on things like added sugar, sodium, fats, preservatives, fiber, and protein content, then apply any warnings relevant to the health conditions you've saved in your profile.</p>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button type="button" class="faq-question">
+                                    <span>Why does it say ingredients are missing?</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="faq-answer">
+                                    <p>Some barcodes aren't linked to a full ingredients list in our product database yet. When that happens, switch to "Upload Image" or "Open Camera" and scan the ingredients label directly for an accurate analysis.</p>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button type="button" class="faq-question">
+                                    <span>Is my scan history private?</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="faq-answer">
+                                    <p>Yes. Your scan history and profile are tied to your account and only accessible when you're logged in.</p>
+                                </div>
+                            </div>
+                            <div class="faq-item">
+                                <button type="button" class="faq-question">
+                                    <span>The barcode scanner or torch isn't working — what do I do?</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="faq-answer">
+                                    <p>Make sure you've granted camera permission to your browser. The torch/flash toggle only works on rear cameras that support it — some laptops and older phones don't expose a torch to the browser at all. If scanning still fails, use the Manual barcode entry or Upload Image instead.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="home-section-header help-section-header">
+                            <h3>Legal</h3>
+                        </div>
+                        <div class="settings-card">
+                            <div class="settings-row" id="helpPrivacyBtn">
+                                <span>Privacy Policy</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="settings-row" id="helpTermsBtn">
+                                <span>Terms of Use</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                            <div class="settings-row no-border" id="helpAboutBtn">
+                                <span>About NutriScan AI</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About / Privacy / Terms Page (shared reader) -->
+                <div id="legalPage" class="page">
+                    <div class="page-header">
+                        <button class="back-btn" id="legalBackBtn">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2 id="legalPageTitle">About</h2>
+                    </div>
+                    <div class="legal-content" id="legalPageBody"></div>
                 </div>
             </div>
         </div>
@@ -392,17 +591,32 @@
     
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay" style="display: none;">
-        <div class="loading-spinner">
-            <i class="fas fa-spinner fa-spin"></i>
+        <div class="loading-spinner scan-loading">
+            <div class="scan-loading-icon">
+                <span class="scan-pulse-ring"></span>
+                <span class="scan-pulse-ring delay"></span>
+                <i class="fas fa-brain"></i>
+            </div>
             <p>Analyzing your food...</p>
+            <span class="scan-loading-sub">Our AI is reading the label and scoring it</span>
+            <div class="dot-container">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
         </div>
     </div>
     
     <!-- Barcode Loading Overlay -->
     <div id="barcodeLoadingOverlay" class="loading-overlay" style="display: none;">
-        <div class="loading-spinner">
-            <i class="fas fa-spinner fa-spin"></i>
+        <div class="loading-spinner scan-loading">
+            <div class="scan-loading-icon">
+                <span class="scan-pulse-ring"></span>
+                <span class="scan-pulse-ring delay"></span>
+                <i class="fas fa-barcode"></i>
+            </div>
             <p id="barcodeLoadingText">Fetching product details...</p>
+            <div class="dot-container">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
         </div>
     </div>
 
@@ -421,6 +635,24 @@
         </div>
     </div>
     
+    <!-- Logout Confirmation Overlay -->
+    <div id="logoutConfirmOverlay" class="reset-success-overlay" style="display: none;">
+        <div class="reset-success-card">
+            <div class="reset-success-icon logout-icon">
+                <i class="fas fa-arrow-right-from-bracket"></i>
+            </div>
+            <h2>Log out of NutriScan AI?</h2>
+            <div class="label-rule"></div>
+            <p>You'll need to log in again to scan food, view your history, or edit your profile.</p>
+            <div class="logout-confirm-actions">
+                <button type="button" id="logoutCancelBtn" class="logout-cancel-btn">Cancel</button>
+                <button type="button" id="logoutConfirmBtn" class="reset-success-btn logout-confirm-btn">
+                    <i class="fas fa-arrow-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="/script.js"></script>
     <script>
         // ------------------------------------------------------------------
@@ -517,12 +749,97 @@
                 });
             }
 
+            // ---- Refresh should return to where you were, not always Home ----
+            const SAFE_PAGES = ['homePage', 'historyPage', 'profilePage'];
+            function saveLastPage(pageId) {
+                if (!SAFE_PAGES.includes(pageId)) return;
+                try { sessionStorage.setItem('nutriscan_last_page', pageId); } catch (e) {}
+            }
+            function restoreLastPage() {
+                try {
+                    const saved = sessionStorage.getItem('nutriscan_last_page');
+                    if (saved && SAFE_PAGES.includes(saved) && saved !== 'homePage' && typeof showPage === 'function') {
+                        showPage(saved);
+                    }
+                } catch (e) {}
+            }
+
+            // ---- Logout now asks for confirmation instead of logging out instantly ----
+            function showLogoutConfirm() {
+                const overlay = document.getElementById('logoutConfirmOverlay');
+                if (overlay) overlay.style.display = 'flex';
+            }
+            function hideLogoutConfirm() {
+                const overlay = document.getElementById('logoutConfirmOverlay');
+                if (overlay) overlay.style.display = 'none';
+            }
+            function interceptLogoutButton(btnId) {
+                const btn = document.getElementById(btnId);
+                if (!btn) return;
+                // Capture phase so this runs before script.js's own bubble-phase
+                // listener (which would otherwise log out immediately).
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    showLogoutConfirm();
+                }, true);
+            }
+
+            // ---- Settings / Help & Support / legal reader ----
+            const LEGAL_CONTENT = {
+                about: {
+                    title: 'About NutriScan AI',
+                    html: `
+                        <div class="legal-hero">
+                            <div class="logo-icon"><i class="fas fa-apple-alt"></i></div>
+                            <h3>NutriScan AI</h3>
+                            <p class="legal-hero-tag">Scan Smart. Eat Better.</p>
+                        </div>
+                        <p>NutriScan AI helps you understand what's really in your food. Scan a barcode or snap a photo of an ingredients label, and we'll read it, score it out of 10, flag ingredients worth knowing about, and explain the result in plain language — factoring in any health conditions you've told us about.</p>
+                        <p>We're not a medical service and our scores are a guide, not a diagnosis. Always check with a doctor or dietitian for advice specific to your health.</p>
+                    `
+                },
+                privacy: {
+                    title: 'Privacy Policy',
+                    html: `
+                        <p><strong>What we collect:</strong> your name and email to create your account, the health conditions you choose to save to your profile, and the scans you save to your history.</p>
+                        <p><strong>How we use it:</strong> to run the analysis you request, personalize warnings based on the health conditions you've selected, and show you your own scan history. We don't sell your data.</p>
+                        <p><strong>Images you scan:</strong> photos are sent to our OCR provider only to extract the ingredients text and are not stored permanently by NutriScan AI beyond what's needed to return your result.</p>
+                        <p><strong>Your control:</strong> you can update your health conditions any time from your Profile, change your password from Settings, and request account deletion by contacting us.</p>
+                        <p>This is a general summary. Contact us at <a href="mailto:nutriscana@gmail.com">nutriscana@gmail.com</a> with any privacy questions.</p>
+                    `
+                },
+                terms: {
+                    title: 'Terms of Use',
+                    html: `
+                        <p>By using NutriScan AI, you agree to use it for personal, informational purposes only. Health scores and AI explanations are generated automatically from ingredient data and are provided "as is," without warranty of accuracy or completeness.</p>
+                        <p>NutriScan AI is not a substitute for professional medical or nutritional advice. Always consult a qualified professional for decisions about your health or diet.</p>
+                        <p>You're responsible for keeping your account credentials secure. Please don't use the service to upload content you don't have rights to, or to attempt to disrupt or misuse the underlying scanning and analysis services.</p>
+                        <p>We may update these terms from time to time. Continued use of the app after changes means you accept the updated terms. Questions? Reach us at <a href="mailto:nutriscana@gmail.com">nutriscana@gmail.com</a>.</p>
+                    `
+                }
+            };
+            let legalReturnPage = 'helpPage';
+            function openLegalPage(type, returnPage) {
+                const content = LEGAL_CONTENT[type];
+                if (!content) return;
+                const titleEl = document.getElementById('legalPageTitle');
+                const bodyEl = document.getElementById('legalPageBody');
+                if (titleEl) titleEl.textContent = content.title;
+                if (bodyEl) bodyEl.innerHTML = content.html;
+                legalReturnPage = returnPage || 'helpPage';
+                if (typeof showPage === 'function') showPage('legalPage');
+            }
+
             document.addEventListener('DOMContentLoaded', function () {
                 if (typeof showMainApp === 'function') {
                     const originalShowMainApp = showMainApp;
                     showMainApp = function () {
                         originalShowMainApp();
+                        const splash = document.getElementById('splashScreen');
+                        if (splash) splash.classList.remove('active');
                         renderHomeOverview();
+                        restoreLastPage();
                     };
                 }
                 if (typeof showPage === 'function') {
@@ -530,11 +847,133 @@
                     showPage = function (pageId) {
                         originalShowPage(pageId);
                         updateBottomNavActive(pageId);
+                        saveLastPage(pageId);
                         if (pageId === 'homePage') renderHomeOverview();
                     };
                 }
+
+                // Splash screen
+                const getStartedBtn = document.getElementById('getStartedBtn');
+                if (getStartedBtn) {
+                    getStartedBtn.addEventListener('click', () => {
+                        const splash = document.getElementById('splashScreen');
+                        if (splash) splash.classList.remove('active');
+                    });
+                }
+
+                // Home
                 const viewAllBtn = document.getElementById('homeViewAllBtn');
                 if (viewAllBtn) viewAllBtn.addEventListener('click', () => showPage('historyPage'));
+
+                // Bottom-nav scan FAB actually starts a scan now
+                const navScanFab = document.getElementById('navScanFab');
+                if (navScanFab) {
+                    navScanFab.addEventListener('click', () => {
+                        const barcodeBtn = document.getElementById('barcodeBtn');
+                        if (barcodeBtn) barcodeBtn.click();
+                    });
+                }
+
+                // Logout confirmation (top nav + profile row + settings row)
+                interceptLogoutButton('logoutBtn');
+                interceptLogoutButton('profileLogoutBtn');
+                interceptLogoutButton('settingsLogoutBtn');
+                const logoutCancelBtn = document.getElementById('logoutCancelBtn');
+                if (logoutCancelBtn) logoutCancelBtn.addEventListener('click', hideLogoutConfirm);
+                const logoutConfirmBtn = document.getElementById('logoutConfirmBtn');
+                if (logoutConfirmBtn) {
+                    logoutConfirmBtn.addEventListener('click', () => {
+                        hideLogoutConfirm();
+                        try { sessionStorage.removeItem('nutriscan_last_page'); } catch (e) {}
+                        if (typeof logout === 'function') logout();
+                    });
+                }
+
+                // Settings / Help & Support navigation
+                const goToSettingsBtn = document.getElementById('goToSettingsBtn');
+                if (goToSettingsBtn) goToSettingsBtn.addEventListener('click', () => showPage('settingsPage'));
+                const goToHelpBtn = document.getElementById('goToHelpBtn');
+                if (goToHelpBtn) goToHelpBtn.addEventListener('click', () => showPage('helpPage'));
+
+                const legalBackBtn = document.getElementById('legalBackBtn');
+                if (legalBackBtn) legalBackBtn.addEventListener('click', () => showPage(legalReturnPage));
+
+                const legalLinks = [
+                    ['settingsAboutBtn', 'about', 'settingsPage'],
+                    ['settingsPrivacyBtn', 'privacy', 'settingsPage'],
+                    ['settingsTermsBtn', 'terms', 'settingsPage'],
+                    ['helpAboutBtn', 'about', 'helpPage'],
+                    ['helpPrivacyBtn', 'privacy', 'helpPage'],
+                    ['helpTermsBtn', 'terms', 'helpPage']
+                ];
+                legalLinks.forEach(([id, type, returnPage]) => {
+                    const el = document.getElementById(id);
+                    if (el) el.addEventListener('click', () => openLegalPage(type, returnPage));
+                });
+
+                // FAQ accordion
+                document.querySelectorAll('.faq-question').forEach(q => {
+                    q.addEventListener('click', () => {
+                        const item = q.closest('.faq-item');
+                        if (!item) return;
+                        const wasOpen = item.classList.contains('open');
+                        document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+                        if (!wasOpen) item.classList.add('open');
+                    });
+                });
+
+                // Change password (uses the existing PUT /api/auth/change-password endpoint)
+                const changePasswordForm = document.getElementById('changePasswordForm');
+                if (changePasswordForm) {
+                    changePasswordForm.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+                        const currentPassword = document.getElementById('currentPasswordInput').value;
+                        const newPassword = document.getElementById('newPasswordInput').value;
+                        const confirmNewPassword = document.getElementById('confirmNewPasswordInput').value;
+
+                        if (newPassword !== confirmNewPassword) {
+                            if (typeof showToast === 'function') showToast('New passwords do not match', 'error');
+                            return;
+                        }
+                        if (newPassword.length < 6) {
+                            if (typeof showToast === 'function') showToast('New password must be at least 6 characters', 'error');
+                            return;
+                        }
+
+                        const btn = document.getElementById('changePasswordBtn');
+                        const originalText = btn ? btn.innerHTML : '';
+                        if (btn) {
+                            btn.disabled = true;
+                            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+                        }
+
+                        try {
+                            const token = localStorage.getItem('nutriscan_token');
+                            const response = await fetch(`${API_URL}/auth/change-password`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                },
+                                body: JSON.stringify({ currentPassword, newPassword })
+                            });
+                            const data = await response.json();
+                            if (data.success) {
+                                if (typeof showToast === 'function') showToast('✅ Password updated successfully!', 'success');
+                                changePasswordForm.reset();
+                            } else {
+                                if (typeof showToast === 'function') showToast(data.error || 'Failed to update password', 'error');
+                            }
+                        } catch (err) {
+                            if (typeof showToast === 'function') showToast('Network error. Please try again.', 'error');
+                        } finally {
+                            if (btn) {
+                                btn.disabled = false;
+                                btn.innerHTML = originalText;
+                            }
+                        }
+                    });
+                }
 
                 updateBottomNavActive('homePage');
                 renderHomeOverview();

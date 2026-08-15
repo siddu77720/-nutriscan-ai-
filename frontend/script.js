@@ -971,36 +971,50 @@ function toggleBarcodeTorch() {
         showToast('Scanner is not active. Tap the overlay to start first.', 'info');
         return;
     }
-    
-    if (typeof barcodeScanner.toggleTorch !== 'function') {
-        console.warn('Torch not supported by this scanner');
+
+    if (typeof barcodeScanner.getRunningTrackCameraCapabilities !== 'function') {
+        console.warn('This version of the scanner does not expose camera capabilities');
         showToast('Torch feature is not available', 'info');
         return;
     }
-    
+
+    let torchFeature;
     try {
-        barcodeTorchOn = !barcodeTorchOn;
-        barcodeScanner.toggleTorch(barcodeTorchOn);
-        
-        const torchBtn = document.getElementById('barcodeTorchBtn');
+        const capabilities = barcodeScanner.getRunningTrackCameraCapabilities();
+        torchFeature = capabilities && typeof capabilities.torchFeature === 'function'
+            ? capabilities.torchFeature()
+            : null;
+    } catch (error) {
+        console.error('Could not read camera capabilities:', error);
+        showToast('Torch feature is not available', 'info');
+        return;
+    }
+
+    if (!torchFeature || typeof torchFeature.isSupported !== 'function' || !torchFeature.isSupported()) {
+        showToast('Torch is not supported on this camera', 'info');
+        return;
+    }
+
+    const nextState = !barcodeTorchOn;
+    const torchBtn = document.getElementById('barcodeTorchBtn');
+
+    Promise.resolve(torchFeature.apply(nextState)).then(() => {
+        barcodeTorchOn = nextState;
         if (torchBtn) {
-            torchBtn.innerHTML = barcodeTorchOn ? 
-                '<i class="fas fa-lightbulb"></i> Torch ON' : 
+            torchBtn.innerHTML = barcodeTorchOn ?
+                '<i class="fas fa-lightbulb"></i> Torch ON' :
                 '<i class="fas fa-lightbulb"></i> Torch';
-            torchBtn.style.background = barcodeTorchOn ? '#16A34A' : '#333';
             torchBtn.classList.toggle('on', barcodeTorchOn);
         }
-    } catch (error) {
+    }).catch(error => {
         console.error('Torch error:', error);
         showToast('Could not toggle torch', 'error');
         barcodeTorchOn = false;
-        const torchBtn = document.getElementById('barcodeTorchBtn');
         if (torchBtn) {
             torchBtn.innerHTML = '<i class="fas fa-lightbulb"></i> Torch';
-            torchBtn.style.background = '#333';
             torchBtn.classList.remove('on');
         }
-    }
+    });
 }
 
 function closeBarcodeScanner() {
@@ -1013,15 +1027,20 @@ function closeBarcodeScanner() {
     const torchBtn = document.getElementById('barcodeTorchBtn');
     if (torchBtn) {
         torchBtn.innerHTML = '<i class="fas fa-lightbulb"></i> Torch';
-        torchBtn.style.background = '#333';
         torchBtn.classList.remove('on');
     }
     
     if (barcodeScanner) {
         try {
-            if (typeof barcodeScanner.toggleTorch === 'function') {
+            if (typeof barcodeScanner.getRunningTrackCameraCapabilities === 'function') {
                 try {
-                    barcodeScanner.toggleTorch(false);
+                    const capabilities = barcodeScanner.getRunningTrackCameraCapabilities();
+                    const torchFeature = capabilities && typeof capabilities.torchFeature === 'function'
+                        ? capabilities.torchFeature()
+                        : null;
+                    if (torchFeature && torchFeature.isSupported && torchFeature.isSupported()) {
+                        torchFeature.apply(false).catch(() => {});
+                    }
                 } catch(e) {}
             }
             
@@ -1518,7 +1537,7 @@ function displayBarcodeResults(data) {
                     <svg width="180" height="180" viewBox="0 0 200 200">
                         <circle cx="100" cy="100" r="80" fill="none" stroke="#e8e8e8" stroke-width="14"/>
                         <circle cx="100" cy="100" r="80" fill="none" stroke="${scoreColor}" stroke-width="14"
-                            stroke-dasharray="${2 * Math.PI * 65}" stroke-dashoffset="${2 * Math.PI * 65 - (score / 10) * 2 * Math.PI * 65}"
+                            stroke-dasharray="${2 * Math.PI * 80}" stroke-dashoffset="${2 * Math.PI * 80 - (score / 10) * 2 * Math.PI * 80}"
                             stroke-linecap="round" transform="rotate(-90 100 100)"/>
                         <text x="100" y="95" text-anchor="middle" font-size="40" font-weight="800" fill="#222">${score}</text>
                         <text x="100" y="125" text-anchor="middle" font-size="14" fill="#888" font-weight="500">out of 10</text>
@@ -1549,7 +1568,7 @@ function displayBarcodeResults(data) {
     }
     
     if (explanation && explanation.summary) {
-        html += `<div class="info-card"><h4><i class="fas fa-brain"></i> AI Nutrition Analysis</h4><p style="line-height: 1.6; font-size: 14px;">${explanation.summary}</p></div>`;
+        html += `<div class="info-card ai-insight-card"><div class="ai-insight-head"><span class="ai-insight-avatar"><i class="fas fa-sparkles"></i></span><h4>AI Nutrition Analysis</h4></div><p class="ai-insight-text">${explanation.summary}</p></div>`;
     }
     
     if (explanation && explanation.harmfulDetails && explanation.harmfulDetails.length > 0) {
@@ -1684,7 +1703,7 @@ function displayResults(data) {
                 <svg width="220" height="220" viewBox="0 0 200 200">
                     <circle cx="100" cy="100" r="80" fill="none" stroke="#e8e8e8" stroke-width="14"/>
                     <circle cx="100" cy="100" r="80" fill="none" stroke="${scoreColor}" stroke-width="14"
-                        stroke-dasharray="${2 * Math.PI * 65}" stroke-dashoffset="${2 * Math.PI * 65 - (realScore / 10) * 2 * Math.PI * 65}"
+                        stroke-dasharray="${2 * Math.PI * 80}" stroke-dashoffset="${2 * Math.PI * 80 - (realScore / 10) * 2 * Math.PI * 80}"
                         stroke-linecap="round" transform="rotate(-90 100 100)"
                         style="transition: stroke-dashoffset 1.5s ease;"/>
                     <text x="100" y="95" text-anchor="middle" font-size="48" font-weight="800" fill="#222">${realScore}</text>
@@ -1778,7 +1797,7 @@ function displayResults(data) {
     html += `</div></div>`;
     
     if (explanation.summary) {
-        html += `<div class="info-card"><h4><i class="fas fa-brain"></i> AI Nutrition Analysis</h4><p style="line-height: 1.6; font-size: 14px;">${explanation.summary}</p></div>`;
+        html += `<div class="info-card ai-insight-card"><div class="ai-insight-head"><span class="ai-insight-avatar"><i class="fas fa-sparkles"></i></span><h4>AI Nutrition Analysis</h4></div><p class="ai-insight-text">${explanation.summary}</p></div>`;
     }
     
     if (explanation.harmfulDetails && explanation.harmfulDetails.length > 0) {
