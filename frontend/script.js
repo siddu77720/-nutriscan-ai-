@@ -987,7 +987,7 @@ function toggleBarcodeTorch() {
             torchBtn.innerHTML = barcodeTorchOn ? 
                 '<i class="fas fa-lightbulb"></i> Torch ON' : 
                 '<i class="fas fa-lightbulb"></i> Torch';
-            torchBtn.style.background = barcodeTorchOn ? '#4CAF50' : '#333';
+            torchBtn.style.background = barcodeTorchOn ? '#16A34A' : '#333';
             torchBtn.classList.toggle('on', barcodeTorchOn);
         }
     } catch (error) {
@@ -1198,17 +1198,17 @@ function displayIngredientsMissingUI(product) {
     const resultContent = document.getElementById('barcodeResultContent');
     
     let html = `
-        <div class="product-header" style="background: linear-gradient(135deg, #fff3e0, #ffe0b2); padding: 16px; border-radius: 12px; margin-bottom: 16px; border: 2px solid #FF9800;">
+        <div class="product-header" style="background: linear-gradient(135deg, #fff3e0, #ffe0b2); padding: 16px; border-radius: 12px; margin-bottom: 16px; border: 2px solid #F59E0B;">
             ${product.image ? `<img src="${product.image}" alt="${product.name}" style="max-width: 100px; max-height: 100px; object-fit: contain; display: block; margin: 0 auto 8px; border-radius: 8px;">` : ''}
-            <h3 style="text-align: center; margin: 8px 0 4px; font-size: 20px; color: #e65100;">${product.name || 'Unknown Product'}</h3>
+            <h3 style="text-align: center; margin: 8px 0 4px; font-size: 20px; color: #B45309;">${product.name || 'Unknown Product'}</h3>
             ${product.brand ? `<p style="text-align: center; color: #555; font-size: 15px; margin: 0;">🏷️ ${product.brand}</p>` : ''}
             ${product.barcode ? `<p style="text-align: center; color: #888; font-size: 12px; margin: 4px 0 0;">📦 Barcode: ${product.barcode}</p>` : ''}
         </div>
         
-        <div class="info-card" style="background: #fff8e1; border: 2px solid #FF9800;">
+        <div class="info-card" style="background: #fff8e1; border: 2px solid #F59E0B;">
             <div style="text-align: center; padding: 10px 0;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #FF9800; margin-bottom: 12px;"></i>
-                <h3 style="color: #e65100;">⚠️ Ingredients Not Found</h3>
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #F59E0B; margin-bottom: 12px;"></i>
+                <h3 style="color: #B45309;">⚠️ Ingredients Not Found</h3>
                 <p style="color: #555; line-height: 1.6; font-size: 15px; margin: 12px 0;">
                     We couldn't find the ingredients list for this product in our database.
                 </p>
@@ -1223,10 +1223,10 @@ function displayIngredientsMissingUI(product) {
             </div>
             
             <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; justify-content: center;">
-                <button onclick="showPage('homePage')" style="padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
+                <button onclick="showPage('homePage')" style="padding: 12px 24px; background: #16A34A; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
                     <i class="fas fa-home"></i> Go Home
                 </button>
-                <button onclick="document.getElementById('uploadBtn').click(); showPage('homePage');" style="padding: 12px 24px; background: #2196F3; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
+                <button onclick="document.getElementById('uploadBtn').click(); showPage('homePage');" style="padding: 12px 24px; background: #0EA5A4; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
                     <i class="fas fa-upload"></i> Upload Image
                 </button>
             </div>
@@ -1245,7 +1245,7 @@ function displayBarcodeResults(data) {
     if (!product || !analysis) {
         resultContent.innerHTML = `
             <div class="info-card" style="text-align: center; padding: 30px;">
-                <i class="fas fa-box-open" style="font-size: 48px; color: #FF9800; margin-bottom: 16px;"></i>
+                <i class="fas fa-box-open" style="font-size: 48px; color: #F59E0B; margin-bottom: 16px;"></i>
                 <h3>Product Not Found</h3>
                 <p style="color: #666; line-height: 1.6;">We couldn't find this product in our database.</p>
                 <div style="background: #fff3e0; border-radius: 12px; padding: 16px; margin: 16px 0; text-align: left;">
@@ -1256,7 +1256,7 @@ function displayBarcodeResults(data) {
                         3️⃣ Search by product name in the app
                     </p>
                 </div>
-                <button onclick="showPage('homePage')" style="margin-top: 16px; padding: 10px 24px; background: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+                <button onclick="showPage('homePage')" style="margin-top: 16px; padding: 10px 24px; background: #16A34A; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
                     <i class="fas fa-home"></i> Go Home
                 </button>
             </div>
@@ -1265,9 +1265,9 @@ function displayBarcodeResults(data) {
     }
     
     let html = `
-        <div class="product-header" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+        <div class="product-header" style="background: linear-gradient(135deg, #E6FBFA, #CFF5F3); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
             ${product.image ? `<img src="${product.image}" alt="${product.name}" style="max-width: 100px; max-height: 100px; object-fit: contain; display: block; margin: 0 auto 8px; border-radius: 8px;">` : ''}
-            <h3 style="text-align: center; margin: 8px 0 4px; font-size: 20px; color: #1a237e;">${product.name || 'Unknown Product'}</h3>
+            <h3 style="text-align: center; margin: 8px 0 4px; font-size: 20px; color: #0B4F4E;">${product.name || 'Unknown Product'}</h3>
             ${product.brand ? `<p style="text-align: center; color: #555; font-size: 15px; margin: 0;">🏷️ ${product.brand}</p>` : ''}
             ${product.barcode ? `<p style="text-align: center; color: #888; font-size: 12px; margin: 4px 0 0;">📦 Barcode: ${product.barcode}</p>` : ''}
         </div>
@@ -1328,24 +1328,24 @@ function displayBarcodeResults(data) {
             let status = 'low';
             let statusText = 'Good';
             let statusEmoji = '🟢';
-            let color = '#2ecc71';
+            let color = '#16A34A';
             let bgColor = '#e8f8ef';
-            let borderColor = '#2ecc71';
+            let borderColor = '#16A34A';
             
             if (pct > 80) {
                 status = 'high';
                 statusText = 'Too High';
                 statusEmoji = '🔴';
-                color = '#e74c3c';
+                color = '#EF4444';
                 bgColor = '#fde8e8';
-                borderColor = '#e74c3c';
+                borderColor = '#EF4444';
             } else if (pct > 50) {
                 status = 'moderate';
                 statusText = 'Moderate';
                 statusEmoji = '🟡';
-                color = '#f39c12';
+                color = '#F59E0B';
                 bgColor = '#fef9e7';
-                borderColor = '#f39c12';
+                borderColor = '#F59E0B';
             }
             
             breakdownItems.push({
@@ -1371,24 +1371,24 @@ function displayBarcodeResults(data) {
             let status = 'low';
             let statusText = 'Good';
             let statusEmoji = '🟢';
-            let color = '#2ecc71';
+            let color = '#16A34A';
             let bgColor = '#e8f8ef';
-            let borderColor = '#2ecc71';
+            let borderColor = '#16A34A';
             
             if (pct > 80) {
                 status = 'high';
                 statusText = 'Too High';
                 statusEmoji = '🔴';
-                color = '#e74c3c';
+                color = '#EF4444';
                 bgColor = '#fde8e8';
-                borderColor = '#e74c3c';
+                borderColor = '#EF4444';
             } else if (pct > 50) {
                 status = 'moderate';
                 statusText = 'Moderate';
                 statusEmoji = '🟡';
-                color = '#f39c12';
+                color = '#F59E0B';
                 bgColor = '#fef9e7';
-                borderColor = '#f39c12';
+                borderColor = '#F59E0B';
             }
             
             breakdownItems.push({
@@ -1414,24 +1414,24 @@ function displayBarcodeResults(data) {
             let status = 'low';
             let statusText = 'Good';
             let statusEmoji = '🟢';
-            let color = '#2ecc71';
+            let color = '#16A34A';
             let bgColor = '#e8f8ef';
-            let borderColor = '#2ecc71';
+            let borderColor = '#16A34A';
             
             if (pct > 80) {
                 status = 'high';
                 statusText = 'Too High';
                 statusEmoji = '🔴';
-                color = '#e74c3c';
+                color = '#EF4444';
                 bgColor = '#fde8e8';
-                borderColor = '#e74c3c';
+                borderColor = '#EF4444';
             } else if (pct > 50) {
                 status = 'moderate';
                 statusText = 'Moderate';
                 statusEmoji = '🟡';
-                color = '#f39c12';
+                color = '#F59E0B';
                 bgColor = '#fef9e7';
-                borderColor = '#f39c12';
+                borderColor = '#F59E0B';
             }
             
             breakdownItems.push({
@@ -1507,10 +1507,10 @@ function displayBarcodeResults(data) {
     if (analysis && analysis.score !== undefined) {
         const score = analysis.score;
         const rating = analysis.rating || 'Moderate';
-        let scoreColor = '#FF9800';
-        if (score >= 7) scoreColor = '#4CAF50';
-        else if (score >= 4) scoreColor = '#FF9800';
-        else scoreColor = '#F44336';
+        let scoreColor = '#F59E0B';
+        if (score >= 7) scoreColor = '#16A34A';
+        else if (score >= 4) scoreColor = '#F59E0B';
+        else scoreColor = '#EF4444';
         
         html += `
             <div class="score-section" style="text-align: center; padding: 20px 15px; background: linear-gradient(135deg, #f8f9fa, #ffffff);">
@@ -1538,8 +1538,8 @@ function displayBarcodeResults(data) {
         `;
         analysis.warnings.forEach(warning => {
             html += `
-                <div class="warning-card" style="margin-bottom: 12px; padding: 16px; border-radius: 12px; background: rgba(244, 67, 54, 0.05); border-left: 4px solid #f44336;">
-                    <i class="fas fa-heartbeat" style="color: #f44336; margin-right: 8px;"></i>
+                <div class="warning-card" style="margin-bottom: 12px; padding: 16px; border-radius: 12px; background: rgba(244, 67, 54, 0.05); border-left: 4px solid #EF4444;">
+                    <i class="fas fa-heartbeat" style="color: #EF4444; margin-right: 8px;"></i>
                     <strong>${warning.condition}</strong>
                     <p style="margin-top: 4px; margin-bottom: 0; color: #555; font-size: 14px; line-height: 1.5;">${warning.warning}</p>
                 </div>
@@ -1555,7 +1555,7 @@ function displayBarcodeResults(data) {
     if (explanation && explanation.harmfulDetails && explanation.harmfulDetails.length > 0) {
         html += `<div class="info-card"><h4><i class="fas fa-skull-crossbones"></i> Ingredients to Limit</h4>`;
         explanation.harmfulDetails.forEach(detail => {
-            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #e74c3c;"></i> ${detail}</p>`;
+            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #EF4444;"></i> ${detail}</p>`;
         });
         html += `</div>`;
     }
@@ -1563,7 +1563,7 @@ function displayBarcodeResults(data) {
     if (explanation && explanation.goodDetails && explanation.goodDetails.length > 0) {
         html += `<div class="info-card"><h4><i class="fas fa-check-circle"></i> Beneficial Ingredients</h4>`;
         explanation.goodDetails.forEach(detail => {
-            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #2ecc71;"></i> ${detail}</p>`;
+            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #16A34A;"></i> ${detail}</p>`;
         });
         html += `</div>`;
     } else {
@@ -1579,8 +1579,8 @@ function displayBarcodeResults(data) {
     
     if (explanation && explanation.alternatives && explanation.alternatives.length > 0) {
         html += `
-            <div class="info-card" style="border: 2px solid #4CAF50; background: linear-gradient(135deg, #f0faf0, #e8f5e9); padding: 16px;">
-                <h4 style="color: #2E7D32; font-size: 16px;"><i class="fas fa-star" style="color: #FFD700;"></i> Healthier Alternatives <span style="font-size: 12px; color: #666; font-weight: normal;">— Best Picks</span></h4>
+            <div class="info-card" style="border: 2px solid #16A34A; background: linear-gradient(135deg, #f0faf0, #e8f5e9); padding: 16px;">
+                <h4 style="color: #16A34A; font-size: 16px;"><i class="fas fa-star" style="color: #FFD700;"></i> Healthier Alternatives <span style="font-size: 12px; color: #666; font-weight: normal;">— Best Picks</span></h4>
                 <div style="display: grid; gap: 12px; margin-top: 10px;">
         `;
         
@@ -1589,21 +1589,21 @@ function displayBarcodeResults(data) {
             if (typeof alt === 'object' && alt.name) {
                 const productLink = alt.link || `https://www.amazon.in/s?k=${encodeURIComponent(alt.name)}`;
                 html += `
-                    <div style="background: white; border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid ${index === 0 ? '#4CAF50' : '#FF9800'};">
+                    <div style="background: white; border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid ${index === 0 ? '#16A34A' : '#F59E0B'};">
                         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                             <span style="font-size: 22px;">${icons[index] || '⭐'}</span>
                             <div style="flex: 1; min-width: 120px;">
-                                <strong style="font-size: 15px; color: #2E7D32;">${alt.name}</strong>
+                                <strong style="font-size: 15px; color: #16A34A;">${alt.name}</strong>
                                 <p style="font-size: 13px; color: #555; margin: 3px 0 0 0;">${alt.description}</p>
                             </div>
-                            <a href="${productLink}" target="_blank" rel="noopener noreferrer" style="background: #4CAF50; color: white; padding: 6px 16px; border-radius: 20px; text-decoration: none; font-size: 12px; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
+                            <a href="${productLink}" target="_blank" rel="noopener noreferrer" style="background: #16A34A; color: white; padding: 6px 16px; border-radius: 20px; text-decoration: none; font-size: 12px; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
                                 <i class="fas fa-external-link-alt"></i> View
                             </a>
                         </div>
                     </div>
                 `;
             } else if (typeof alt === 'string') {
-                html += `<p style="margin-bottom: 6px; font-size: 14px;"><i class="fas fa-check" style="color: #4CAF50;"></i> ${alt}</p>`;
+                html += `<p style="margin-bottom: 6px; font-size: 14px;"><i class="fas fa-check" style="color: #16A34A;"></i> ${alt}</p>`;
             }
         });
         
@@ -1660,22 +1660,22 @@ function displayResults(data) {
     const realScore = analysis.score !== undefined && analysis.score !== null ? analysis.score : 5;
     const demoRating = analysis.rating || 'Moderate';
     
-    let scoreColor = '#FF9800';
+    let scoreColor = '#F59E0B';
     let ratingBg = 'rgba(255, 152, 0, 0.1)';
-    let ratingColor = '#FF9800';
+    let ratingColor = '#F59E0B';
     
     if (realScore >= 7) {
-        scoreColor = '#4CAF50';
+        scoreColor = '#16A34A';
         ratingBg = 'rgba(76, 175, 80, 0.1)';
-        ratingColor = '#4CAF50';
+        ratingColor = '#16A34A';
     } else if (realScore >= 4) {
-        scoreColor = '#FF9800';
+        scoreColor = '#F59E0B';
         ratingBg = 'rgba(255, 152, 0, 0.1)';
-        ratingColor = '#FF9800';
+        ratingColor = '#F59E0B';
     } else {
-        scoreColor = '#F44336';
+        scoreColor = '#EF4444';
         ratingBg = 'rgba(244, 67, 54, 0.1)';
-        ratingColor = '#F44336';
+        ratingColor = '#EF4444';
     }
     
     let html = `
@@ -1720,9 +1720,9 @@ function displayResults(data) {
         ingredients.forEach((item) => {
             const data = item.data;
             const pct = Math.min((data.actual / data.limit) * 100, 100);
-            const color = data.status === 'high' ? '#e74c3c' : data.status === 'moderate' ? '#f39c12' : '#2ecc71';
+            const color = data.status === 'high' ? '#EF4444' : data.status === 'moderate' ? '#F59E0B' : '#16A34A';
             const bgColor = data.status === 'high' ? '#fde8e8' : data.status === 'moderate' ? '#fef9e7' : '#e8f8ef';
-            const borderColor = data.status === 'high' ? '#e74c3c' : data.status === 'moderate' ? '#f39c12' : '#2ecc71';
+            const borderColor = data.status === 'high' ? '#EF4444' : data.status === 'moderate' ? '#F59E0B' : '#16A34A';
             const statusEmoji = data.status === 'high' ? '🔴' : data.status === 'moderate' ? '🟡' : '🟢';
             const statusTextIng = data.status === 'high' ? 'Too High' : data.status === 'moderate' ? 'Moderate' : 'Good';
             
@@ -1784,7 +1784,7 @@ function displayResults(data) {
     if (explanation.harmfulDetails && explanation.harmfulDetails.length > 0) {
         html += `<div class="info-card"><h4><i class="fas fa-skull-crossbones"></i> Ingredients to Limit</h4>`;
         explanation.harmfulDetails.forEach(detail => {
-            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #e74c3c;"></i> ${detail}</p>`;
+            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #EF4444;"></i> ${detail}</p>`;
         });
         html += `</div>`;
     }
@@ -1792,15 +1792,15 @@ function displayResults(data) {
     if (explanation.goodDetails && explanation.goodDetails.length > 0) {
         html += `<div class="info-card"><h4><i class="fas fa-check-circle"></i> Beneficial Ingredients</h4>`;
         explanation.goodDetails.forEach(detail => {
-            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #2ecc71;"></i> ${detail}</p>`;
+            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #16A34A;"></i> ${detail}</p>`;
         });
         html += `</div>`;
     }
     
     if (explanation.alternatives && explanation.alternatives.length > 0) {
         html += `
-            <div class="info-card" style="border: 2px solid #4CAF50; background: linear-gradient(135deg, #f0faf0, #e8f5e9); padding: 16px;">
-                <h4 style="color: #2E7D32; font-size: 16px;"><i class="fas fa-star" style="color: #FFD700;"></i> Healthier Alternatives <span style="font-size: 12px; color: #666; font-weight: normal;">— Best Picks</span></h4>
+            <div class="info-card" style="border: 2px solid #16A34A; background: linear-gradient(135deg, #f0faf0, #e8f5e9); padding: 16px;">
+                <h4 style="color: #16A34A; font-size: 16px;"><i class="fas fa-star" style="color: #FFD700;"></i> Healthier Alternatives <span style="font-size: 12px; color: #666; font-weight: normal;">— Best Picks</span></h4>
                 <div style="display: grid; gap: 12px; margin-top: 10px;">
         `;
         
@@ -1809,21 +1809,21 @@ function displayResults(data) {
             if (typeof alt === 'object' && alt.name) {
                 const productLink = alt.link || `https://www.amazon.in/s?k=${encodeURIComponent(alt.name)}`;
                 html += `
-                    <div style="background: white; border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid ${index === 0 ? '#4CAF50' : '#FF9800'};">
+                    <div style="background: white; border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid ${index === 0 ? '#16A34A' : '#F59E0B'};">
                         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                             <span style="font-size: 22px;">${icons[index] || '⭐'}</span>
                             <div style="flex: 1; min-width: 120px;">
-                                <strong style="font-size: 15px; color: #2E7D32;">${alt.name}</strong>
+                                <strong style="font-size: 15px; color: #16A34A;">${alt.name}</strong>
                                 <p style="font-size: 13px; color: #555; margin: 3px 0 0 0;">${alt.description}</p>
                             </div>
-                            <a href="${productLink}" target="_blank" style="background: #4CAF50; color: white; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; white-space: nowrap;">
+                            <a href="${productLink}" target="_blank" style="background: #16A34A; color: white; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; white-space: nowrap;">
                                 <i class="fas fa-external-link-alt"></i> View
                             </a>
                         </div>
                     </div>
                 `;
             } else if (typeof alt === 'string') {
-                html += `<p style="margin-bottom: 6px; font-size: 14px;"><i class="fas fa-check" style="color: #4CAF50;"></i> ${alt}</p>`;
+                html += `<p style="margin-bottom: 6px; font-size: 14px;"><i class="fas fa-check" style="color: #16A34A;"></i> ${alt}</p>`;
             }
         });
         
@@ -2007,7 +2007,7 @@ async function openCamera() {
         modeToggle.style.cssText = `
             position: absolute; top: 20px; left: 20px;
             padding: 10px 20px;
-            background: #4CAF50;
+            background: #16A34A;
             color: white;
             border: none;
             border-radius: 30px;
@@ -2041,7 +2041,7 @@ async function openCamera() {
         captureBtn.innerHTML = '📸 Manual Capture';
         captureBtn.style.cssText = `
             margin-top: 20px; padding: 15px 30px;
-            background: #2196F3;
+            background: #0EA5A4;
             color: white;
             border: none;
             border-radius: 50px;
@@ -2056,7 +2056,7 @@ async function openCamera() {
         closeBtn.innerHTML = '❌ Close';
         closeBtn.style.cssText = `
             margin-top: 10px; padding: 10px 20px;
-            background: #f44336;
+            background: #EF4444;
             color: white;
             border: none;
             border-radius: 50px;
@@ -2083,7 +2083,7 @@ async function openCamera() {
             isAutoMode = !isAutoMode;
             if (isAutoMode) {
                 modeToggle.innerHTML = '🤖 Auto Detect ON';
-                modeToggle.style.background = '#4CAF50';
+                modeToggle.style.background = '#16A34A';
                 statusText.innerHTML = '🔍 Auto detecting ingredients...';
                 statusText.style.display = 'block';
                 if (detectionInterval) {
@@ -2092,7 +2092,7 @@ async function openCamera() {
                 startAutoDetection(canvasElement, canvasContext, statusText, stream);
             } else {
                 modeToggle.innerHTML = '👆 Manual Mode ON';
-                modeToggle.style.background = '#FF9800';
+                modeToggle.style.background = '#F59E0B';
                 statusText.innerHTML = '📸 Click "Manual Capture" to take photo';
                 statusText.style.display = 'block';
                 if (detectionInterval) {
@@ -2189,7 +2189,7 @@ function showPhotoPreview(blob, stream) {
         max-height: 50vh;
         border-radius: 12px;
         margin-bottom: 15px;
-        border: 3px solid #4CAF50;
+        border: 3px solid #16A34A;
         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     `;
     
@@ -2197,7 +2197,7 @@ function showPhotoPreview(blob, stream) {
     confirmBtn.innerHTML = '✅ Confirm & Analyze';
     confirmBtn.style.cssText = `
         padding: 12px 25px;
-        background: #4CAF50;
+        background: #16A34A;
         color: white;
         border: none;
         border-radius: 50px;
@@ -2212,7 +2212,7 @@ function showPhotoPreview(blob, stream) {
     retakeBtn.innerHTML = '🔄 Retake Photo';
     retakeBtn.style.cssText = `
         padding: 12px 25px;
-        background: #FF9800;
+        background: #F59E0B;
         color: white;
         border: none;
         border-radius: 50px;
@@ -2284,13 +2284,13 @@ function detectTextRegions(imageData, width, height) {
 function drawDetectionBorder(ctx, width, height, hasText) {
     if (!hasText) return;
     
-    ctx.strokeStyle = '#4CAF50';
+    ctx.strokeStyle = '#16A34A';
     ctx.lineWidth = 3;
     ctx.setLineDash([10, 5]);
     ctx.strokeRect(20, 20, width - 40, height - 40);
     
     ctx.setLineDash([]);
-    ctx.strokeStyle = '#4CAF50';
+    ctx.strokeStyle = '#16A34A';
     ctx.lineWidth = 4;
     
     ctx.beginPath();
@@ -2654,11 +2654,11 @@ function initEventListeners() {
             `;
             
             modalContent.innerHTML = `
-                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #f44336; margin-bottom: 16px; display: block;"></i>
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #EF4444; margin-bottom: 16px; display: block;"></i>
                 <h3 style="margin-bottom: 8px; font-size: 18px;">Clear History?</h3>
                 <p style="margin-bottom: 20px; color: #666; font-size: 14px;">Are you sure you want to clear all your scan history? This action cannot be undone.</p>
                 <div style="display: flex; gap: 12px;">
-                    <button id="confirmClearBtn" style="flex: 1; padding: 10px; background: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Yes, Clear</button>
+                    <button id="confirmClearBtn" style="flex: 1; padding: 10px; background: #EF4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Yes, Clear</button>
                     <button id="cancelClearBtn" style="flex: 1; padding: 10px; background: #ccc; color: #333; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Cancel</button>
                 </div>
             `;
