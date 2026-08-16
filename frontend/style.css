@@ -98,9 +98,10 @@ body::after {
 /* Soft radial glows */
 body::before {
     background:
-        radial-gradient(560px 420px at 12% -4%, rgba(167, 243, 208, 0.55), transparent 60%),
-        radial-gradient(480px 420px at 108% 10%, rgba(220, 252, 231, 0.65), transparent 60%),
-        radial-gradient(620px 520px at 50% 115%, rgba(22, 163, 74, 0.10), transparent 60%);
+        radial-gradient(600px 460px at 10% -6%, rgba(167, 243, 208, 0.65), transparent 62%),
+        radial-gradient(520px 460px at 106% 8%, rgba(220, 252, 231, 0.75), transparent 62%),
+        radial-gradient(660px 560px at 50% 118%, rgba(22, 163, 74, 0.14), transparent 62%),
+        radial-gradient(420px 380px at 85% 60%, rgba(14, 165, 164, 0.08), transparent 65%);
 }
 
 /* Extremely faint scanning grid + data-node motif */
@@ -151,21 +152,24 @@ body::after {
 }
 @keyframes leafFall {
     0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
-    8%   { opacity: 0.5; }
-    50%  { transform: translateY(50vh) translateX(24px) rotate(160deg); }
-    92%  { opacity: 0.35; }
-    100% { transform: translateY(112vh) translateX(-18px) rotate(320deg); opacity: 0; }
+    8%   { opacity: 0.85; }
+    50%  { transform: translateY(50vh) translateX(26px) rotate(160deg); opacity: 0.7; }
+    92%  { opacity: 0.6; }
+    100% { transform: translateY(112vh) translateX(-20px) rotate(320deg); opacity: 0; }
 }
-.leaf-1 { left: 6%;  font-size: 15px; animation-duration: 19s; animation-delay: 0s;  opacity: 0.35; }
-.leaf-2 { left: 22%; font-size: 11px; animation-duration: 24s; animation-delay: 3s;  opacity: 0.28; }
-.leaf-3 { left: 40%; font-size: 17px; animation-duration: 21s; animation-delay: 7s;  opacity: 0.3; }
-.leaf-4 { left: 58%; font-size: 12px; animation-duration: 26s; animation-delay: 2s;  opacity: 0.25; }
-.leaf-5 { left: 76%; font-size: 16px; animation-duration: 22s; animation-delay: 9s;  opacity: 0.32; }
-.leaf-6 { left: 90%; font-size: 13px; animation-duration: 20s; animation-delay: 5s;  opacity: 0.28; }
-.dot-1 { left: 14%; animation-duration: 17s; animation-delay: 1s; }
-.dot-2 { left: 48%; animation-duration: 23s; animation-delay: 6s; }
-.dot-3 { left: 66%; animation-duration: 18s; animation-delay: 4s; }
-.dot-4 { left: 84%; animation-duration: 25s; animation-delay: 8s; }
+.leaf-1 { left: 5%;  font-size: 19px; animation-duration: 18s; animation-delay: 0s;    }
+.leaf-2 { left: 20%; font-size: 14px; animation-duration: 23s; animation-delay: 2.5s;  }
+.leaf-3 { left: 36%; font-size: 21px; animation-duration: 20s; animation-delay: 6s;    }
+.leaf-4 { left: 52%; font-size: 15px; animation-duration: 25s; animation-delay: 1.5s;  }
+.leaf-5 { left: 68%; font-size: 20px; animation-duration: 21s; animation-delay: 8s;    }
+.leaf-6 { left: 84%; font-size: 16px; animation-duration: 19s; animation-delay: 4.5s;  }
+.leaf-7 { left: 95%; font-size: 13px; animation-duration: 24s; animation-delay: 10s;   }
+.leaf-8 { left: 12%; font-size: 12px; animation-duration: 22s; animation-delay: 12s;   }
+.dot-1 { left: 14%; width: 7px; height: 7px; animation-duration: 17s; animation-delay: 1s; }
+.dot-2 { left: 48%; width: 8px; height: 8px; animation-duration: 23s; animation-delay: 6s; }
+.dot-3 { left: 66%; width: 6px; height: 6px; animation-duration: 18s; animation-delay: 4s; }
+.dot-4 { left: 84%; width: 8px; height: 8px; animation-duration: 25s; animation-delay: 8s; }
+.dot-5 { left: 30%; width: 7px; height: 7px; animation-duration: 20s; animation-delay: 3s; }
 
 h1, h2, h3, h4 {
     font-family: var(--font-heading);
@@ -358,9 +362,37 @@ input:focus-visible {
     justify-content: center;
     text-align: center;
     padding: 40px 28px calc(48px + var(--safe-bottom));
-    background: linear-gradient(175deg, #F5FAF7 0%, var(--soft-green) 55%, var(--mint) 130%);
+    background: linear-gradient(175deg, #EEFBF3 0%, var(--soft-green) 50%, var(--mint) 135%);
+    overflow: hidden;
 }
 .splash-screen.active { display: flex; }
+
+/* Dense leaf/particle layer scoped to the splash — sits above the
+   splash's own background but behind its text/button content. */
+.splash-leaves {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.splash-content, .splash-cta, .splash-loader { position: relative; z-index: 1; }
+
+.splash-leaf { color: var(--primary-green); }
+.splash-leaf.dot { background: var(--teal); }
+.sl-1 { left: 8%;  top: -8%; font-size: 20px;  animation-duration: 13s; animation-delay: 0s; }
+.sl-2 { left: 24%; top: -8%; font-size: 14px;  animation-duration: 17s; animation-delay: 2s; }
+.sl-3 { left: 42%; top: -8%; font-size: 22px; animation-duration: 15s; animation-delay: 4.5s; }
+.sl-4 { left: 60%; top: -8%; font-size: 16px;  animation-duration: 19s; animation-delay: 1s; }
+.sl-5 { left: 76%; top: -8%; font-size: 21px;  animation-duration: 14s; animation-delay: 6s; }
+.sl-6 { left: 90%; top: -8%; font-size: 15px; animation-duration: 18s; animation-delay: 3s; }
+.sl-7 { left: 14%; top: -8%; font-size: 13px; animation-duration: 16s; animation-delay: 7.5s; }
+.sl-dot-1 { left: 18%; top: -8%; width: 8px; height: 8px; animation-duration: 12s; animation-delay: 1.5s; }
+.sl-dot-2 { left: 50%; top: -8%; width: 7px; height: 7px; animation-duration: 16s; animation-delay: 5s; }
+.sl-dot-3 { left: 68%; top: -8%; width: 9px; height: 9px; animation-duration: 14s; animation-delay: 3.5s; }
+.sl-dot-4 { left: 84%; top: -8%; width: 6px; height: 6px; animation-duration: 17s; animation-delay: 6.5s; }
+.sl-dot-5 { left: 34%; top: -8%; width: 8px; height: 8px; animation-duration: 13s; animation-delay: 8s; }
+
 .splash-content { animation: cardRise 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
 .splash-logo {
     width: 92px;
@@ -396,30 +428,52 @@ input:focus-visible {
 .splash-cta:hover i { transform: translateX(3px); }
 
 /* Loading-mode: shown instead of Get Started for a returning, logged-in user */
-.splash-loading-bar {
+.splash-loader {
     display: none;
-    width: 100%;
-    max-width: 220px;
-    height: 5px;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
     margin-top: 34px;
-    border-radius: 6px;
-    background: rgba(16, 37, 26, 0.1);
-    overflow: hidden;
 }
-.splash-loading-fill {
-    display: block;
-    width: 40%;
-    height: 100%;
-    border-radius: 6px;
-    background: linear-gradient(90deg, var(--primary-green), var(--teal));
-    animation: splashLoadingSlide 1.1s ease-in-out infinite;
+.splash-loader-ring {
+    width: 48px;
+    height: 48px;
+    animation: loaderSpin 1.1s linear infinite;
 }
-@keyframes splashLoadingSlide {
-    0%   { transform: translateX(-100%); }
-    100% { transform: translateX(350%); }
+@keyframes loaderSpin { to { transform: rotate(360deg); } }
+.loader-track {
+    fill: none;
+    stroke: rgba(16, 37, 26, 0.1);
+    stroke-width: 3.5;
+}
+.loader-arc {
+    fill: none;
+    stroke: var(--primary-green);
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-dasharray: 30 90;
+    transform-origin: center;
+}
+.loader-arc-2 {
+    stroke: var(--teal);
+    stroke-dasharray: 16 104;
+    animation: loaderArc2 1.1s linear infinite reverse;
+    opacity: 0.75;
+}
+@keyframes loaderArc2 { to { transform: rotate(360deg); } }
+.splash-loader-text {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--primary-green-deep);
+    letter-spacing: 0.01em;
+    animation: loaderTextFade 1.6s ease-in-out infinite;
+}
+@keyframes loaderTextFade {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
 }
 .splash-screen.loading-mode .splash-cta { display: none; }
-.splash-screen.loading-mode .splash-loading-bar { display: block; }
+.splash-screen.loading-mode .splash-loader { display: flex; }
 
 /* ============================================================
    APP SHELL / NAVBAR / BOTTOM NAV

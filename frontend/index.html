@@ -22,11 +22,28 @@
         <span class="leaf-particle leaf-5"><i class="fas fa-leaf"></i></span>
         <span class="leaf-particle leaf-6"><i class="fas fa-leaf"></i></span>
         <span class="leaf-particle dot dot-4"></span>
+        <span class="leaf-particle leaf-7"><i class="fas fa-leaf"></i></span>
+        <span class="leaf-particle leaf-8"><i class="fas fa-leaf"></i></span>
+        <span class="leaf-particle dot dot-5"></span>
     </div>
 
     <div id="app">
         <!-- Splash / Intro Screen -->
         <div id="splashScreen" class="splash-screen active">
+            <div class="splash-leaves" aria-hidden="true">
+                <span class="leaf-particle splash-leaf sl-1"><i class="fas fa-leaf"></i></span>
+                <span class="leaf-particle splash-leaf sl-2"><i class="fas fa-leaf"></i></span>
+                <span class="leaf-particle splash-leaf dot sl-dot-1"></span>
+                <span class="leaf-particle splash-leaf sl-3"><i class="fas fa-leaf"></i></span>
+                <span class="leaf-particle splash-leaf dot sl-dot-2"></span>
+                <span class="leaf-particle splash-leaf sl-4"><i class="fas fa-leaf"></i></span>
+                <span class="leaf-particle splash-leaf sl-5"><i class="fas fa-leaf"></i></span>
+                <span class="leaf-particle splash-leaf dot sl-dot-3"></span>
+                <span class="leaf-particle splash-leaf sl-6"><i class="fas fa-leaf"></i></span>
+                <span class="leaf-particle splash-leaf dot sl-dot-4"></span>
+                <span class="leaf-particle splash-leaf sl-7"><i class="fas fa-leaf"></i></span>
+                <span class="leaf-particle splash-leaf dot sl-dot-5"></span>
+            </div>
             <div class="splash-content">
                 <div class="logo-icon splash-logo">
                     <i class="fas fa-apple-alt"></i>
@@ -39,8 +56,13 @@
             <button type="button" id="getStartedBtn" class="auth-btn splash-cta">
                 Get Started <i class="fas fa-arrow-right"></i>
             </button>
-            <div class="splash-loading-bar">
-                <span class="splash-loading-fill"></span>
+            <div class="splash-loader">
+                <svg class="splash-loader-ring" viewBox="0 0 48 48">
+                    <circle class="loader-track" cx="24" cy="24" r="19"></circle>
+                    <circle class="loader-arc" cx="24" cy="24" r="19"></circle>
+                    <circle class="loader-arc loader-arc-2" cx="24" cy="24" r="19"></circle>
+                </svg>
+                <span class="splash-loader-text" id="splashLoaderText">Preparing your dashboard</span>
             </div>
         </div>
 
@@ -685,22 +707,35 @@
         // ------------------------------------------------------------------
         (function () {
             const appInitTime = Date.now();
-            const MIN_SPLASH_MS = 1100;
+            const MIN_SPLASH_MS = 2000;
             const splash = document.getElementById('splashScreen');
 
             // If a session already exists, skip the "Get Started" splash
             // and show a brief loading state instead, then continue
             // straight to Home once checkAuth() has restored the session.
             const hasSession = !!(localStorage.getItem('nutriscan_token') && localStorage.getItem('nutriscan_user'));
+            let loaderTextTimer = null;
             if (splash && hasSession) {
                 splash.classList.add('loading-mode');
+                const loaderText = document.getElementById('splashLoaderText');
+                if (loaderText) {
+                    const messages = ['Preparing your dashboard', 'Loading your scans', 'Almost there'];
+                    let i = 0;
+                    loaderTextTimer = setInterval(() => {
+                        i = (i + 1) % messages.length;
+                        loaderText.textContent = messages[i];
+                    }, 900);
+                }
             }
 
             function dismissSplash() {
                 if (!splash) return;
                 const elapsed = Date.now() - appInitTime;
                 const remaining = Math.max(0, MIN_SPLASH_MS - elapsed);
-                setTimeout(() => splash.classList.remove('active'), remaining);
+                setTimeout(() => {
+                    splash.classList.remove('active');
+                    if (loaderTextTimer) clearInterval(loaderTextTimer);
+                }, remaining);
             }
 
             function getHistory() {
