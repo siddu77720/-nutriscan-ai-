@@ -11,7 +11,7 @@ const API_URL = (() => {
   // Development (Local)
   return 'http://localhost:5000/api';
 })();
- 
+
 console.log('🔗 API URL:', API_URL);
 
 let currentUser = null;
