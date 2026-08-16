@@ -12,7 +12,7 @@
    reserved for positive/healthy signals only, not the brand theme.
    ============================================================ */
 
-/* ---------- Design tokens ---------- */
+/* ---------- Design tokens ---------- */ 
 :root {
     /* Core palette — Food-Tech + AI Scanner */
     --bg-page: #FFF9F3;
