@@ -639,7 +639,7 @@ async function startBarcodeScanner() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             showToast('Camera not supported. Please enter barcode manually.', 'error');
             const manualInput = document.getElementById('manualBarcodeInput');
-            if (manualInput) manualInput.style.display = 'block';
+            if (manualInput) manualInput.style.display = 'flex';
             return;
         }
         
@@ -665,7 +665,7 @@ async function startBarcodeScanner() {
         container.style.height = 'auto';
         container.style.aspectRatio = '1/1';
         container.style.zIndex = 'auto';
-        container.style.backgroundColor = '#000';
+        container.style.backgroundColor = '#10251A';
         container.style.borderRadius = '16px';
         container.style.overflow = 'hidden';
         container.style.padding = '0';
@@ -813,7 +813,7 @@ async function startBarcodeScanner() {
         console.error('Barcode scanner error:', error);
         showToast('Could not start barcode scanner. Please use manual entry.', 'error');
         const manualInput = document.getElementById('manualBarcodeInput');
-        if (manualInput) manualInput.style.display = 'block';
+        if (manualInput) manualInput.style.display = 'flex';
         
         const status = document.getElementById('barcodeStatus');
         if (status) {
@@ -839,7 +839,7 @@ function showOverlay() {
         container.style.height = 'auto';
         container.style.aspectRatio = '1/1';
         container.style.zIndex = 'auto';
-        container.style.backgroundColor = '#000';
+        container.style.backgroundColor = '#10251A';
         container.style.borderRadius = '16px';
         container.style.overflow = 'hidden';
         container.style.padding = '0';
@@ -1119,7 +1119,7 @@ function closeBarcodeScanner() {
         container.style.height = 'auto';
         container.style.aspectRatio = '1/1';
         container.style.zIndex = 'auto';
-        container.style.backgroundColor = '#000';
+        container.style.backgroundColor = '#10251A';
         container.style.borderRadius = '16px';
         container.style.overflow = 'hidden';
         container.style.padding = '0';
@@ -1568,7 +1568,7 @@ function displayBarcodeResults(data) {
     }
     
     if (explanation && explanation.summary) {
-        html += `<div class="info-card ai-insight-card"><div class="ai-insight-head"><span class="ai-insight-avatar"><i class="fas fa-sparkles"></i></span><h4>AI Nutrition Analysis</h4></div><p class="ai-insight-text">${explanation.summary}</p></div>`;
+        html += `<div class="info-card ai-insight-card"><div class="ai-insight-head"><span class="ai-insight-avatar"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="4.6" r="1.3" fill="currentColor"/><line x1="12" y1="5.9" x2="12" y2="7.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><rect x="5" y="7.8" width="14" height="11.2" rx="4.2" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="1.3"/><circle cx="9.4" cy="13.2" r="1.3" fill="currentColor"/><circle cx="14.6" cy="13.2" r="1.3" fill="currentColor"/><path d="M9.4 16.3c0.85 0.9 3.35 0.9 4.2 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="2.6" y1="12.5" x2="5" y2="12.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="19" y1="12.5" x2="21.4" y2="12.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span><h4>AI Nutrition Analysis<small>Personalized insight</small></h4></div><p class="ai-insight-text">${explanation.summary}</p></div>`;
     }
     
     if (explanation && explanation.harmfulDetails && explanation.harmfulDetails.length > 0) {
@@ -1797,7 +1797,7 @@ function displayResults(data) {
     html += `</div></div>`;
     
     if (explanation.summary) {
-        html += `<div class="info-card ai-insight-card"><div class="ai-insight-head"><span class="ai-insight-avatar"><i class="fas fa-sparkles"></i></span><h4>AI Nutrition Analysis</h4></div><p class="ai-insight-text">${explanation.summary}</p></div>`;
+        html += `<div class="info-card ai-insight-card"><div class="ai-insight-head"><span class="ai-insight-avatar"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="4.6" r="1.3" fill="currentColor"/><line x1="12" y1="5.9" x2="12" y2="7.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><rect x="5" y="7.8" width="14" height="11.2" rx="4.2" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="1.3"/><circle cx="9.4" cy="13.2" r="1.3" fill="currentColor"/><circle cx="14.6" cy="13.2" r="1.3" fill="currentColor"/><path d="M9.4 16.3c0.85 0.9 3.35 0.9 4.2 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="2.6" y1="12.5" x2="5" y2="12.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="19" y1="12.5" x2="21.4" y2="12.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></span><h4>AI Nutrition Analysis<small>Personalized insight</small></h4></div><p class="ai-insight-text">${explanation.summary}</p></div>`;
     }
     
     if (explanation.harmfulDetails && explanation.harmfulDetails.length > 0) {
@@ -2566,7 +2566,7 @@ function initEventListeners() {
                 } catch(err) {}
             }
             
-            manualInput.style.display = 'block';
+            manualInput.style.display = 'flex';
             document.getElementById('barcodeManualInput').focus();
             
             if (overlay) {

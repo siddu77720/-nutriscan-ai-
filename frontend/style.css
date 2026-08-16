@@ -395,6 +395,32 @@ input:focus-visible {
 .splash-cta i { font-size: 13px; transition: transform 0.2s ease; }
 .splash-cta:hover i { transform: translateX(3px); }
 
+/* Loading-mode: shown instead of Get Started for a returning, logged-in user */
+.splash-loading-bar {
+    display: none;
+    width: 100%;
+    max-width: 220px;
+    height: 5px;
+    margin-top: 34px;
+    border-radius: 6px;
+    background: rgba(16, 37, 26, 0.1);
+    overflow: hidden;
+}
+.splash-loading-fill {
+    display: block;
+    width: 40%;
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--primary-green), var(--teal));
+    animation: splashLoadingSlide 1.1s ease-in-out infinite;
+}
+@keyframes splashLoadingSlide {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(350%); }
+}
+.splash-screen.loading-mode .splash-cta { display: none; }
+.splash-screen.loading-mode .splash-loading-bar { display: block; }
+
 /* ============================================================
    APP SHELL / NAVBAR / BOTTOM NAV
    ============================================================ */
@@ -510,27 +536,29 @@ input:focus-visible {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    justify-content: flex-start;
+    gap: 5px;
     padding: 0;
+    width: 64px;
     position: relative;
 }
 .fab-circle {
-    width: 50px; height: 50px; border-radius: 50%;
+    width: 52px; height: 52px; border-radius: 50%;
     background: linear-gradient(145deg, var(--primary-green), var(--primary-green-deep));
     color: var(--white);
     display: flex; align-items: center; justify-content: center;
-    font-size: 19px;
+    font-size: 20px;
     box-shadow: var(--shadow-green-glow);
-    transform: translateY(-16px);
-    transition: var(--transition);
+    margin-top: -26px;
     border: 3px solid var(--glass-bg-strong);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.bottom-nav-fab:active .fab-circle { transform: translateY(-16px) scale(0.92); }
+.bottom-nav-fab:active .fab-circle { transform: scale(0.92); }
 .fab-label {
     font-size: 10.5px;
     font-weight: 700;
     color: var(--primary-green-deep);
-    margin-top: -10px;
+    line-height: 1;
 }
 
 /* ============================================================
@@ -652,14 +680,14 @@ input:focus-visible {
 }
 .action-btn i { font-size: 17px; }
 .action-btn.primary {
+    background: linear-gradient(135deg, var(--primary-green-deep), var(--primary-green-dark));
+    color: var(--white);
+    box-shadow: 0 12px 24px rgba(14, 60, 34, 0.28);
+}
+.action-btn.barcode {
     background: linear-gradient(135deg, var(--primary-green), var(--primary-green-deep));
     color: var(--white);
     box-shadow: var(--shadow-green-glow);
-}
-.action-btn.barcode {
-    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
-    color: var(--white);
-    box-shadow: 0 12px 24px rgba(14, 165, 164, 0.28);
 }
 .action-btn.secondary {
     background: var(--glass-bg-strong);
@@ -775,16 +803,32 @@ input:focus-visible {
     background: radial-gradient(circle, rgba(167, 243, 208, 0.6), transparent 70%);
     pointer-events: none;
 }
-.ai-insight-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; position: relative; z-index: 1; }
+.ai-insight-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; position: relative; z-index: 1; }
 .ai-insight-avatar {
-    width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0;
+    width: 42px; height: 42px; border-radius: 14px; flex-shrink: 0;
     background: linear-gradient(145deg, var(--primary-green), var(--teal));
     color: var(--white);
     display: flex; align-items: center; justify-content: center;
-    font-size: 13px;
-    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+    position: relative;
 }
+.ai-insight-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 16px;
+    border: 1.5px solid rgba(22, 163, 74, 0.35);
+    animation: aiAvatarPulse 2.4s ease-in-out infinite;
+}
+@keyframes aiAvatarPulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.12); opacity: 0; }
+}
+.ai-insight-avatar svg { position: relative; z-index: 1; }
 .ai-insight-head h4 { margin: 0; font-size: 13.5px; font-weight: 800; color: var(--primary-green-dark); }
+.ai-insight-head h4 small {
+    display: block; font-size: 10.5px; font-weight: 600; color: var(--gray); margin-top: 1px;
+}
 .ai-insight-text {
     font-size: 13.5px;
     color: var(--ink-soft);
@@ -917,17 +961,6 @@ input:focus-visible {
 .condition-checkbox input { accent-color: var(--primary-green); width: 17px; height: 17px; }
 .condition-checkbox i { color: var(--primary-green); width: 16px; text-align: center; }
 
-.custom-condition-section { display: flex; gap: 8px; margin-top: 12px; }
-.custom-condition-section input {
-    flex: 1; height: 44px; padding: 0 14px;
-    border: 1.5px solid var(--border-color); border-radius: var(--radius-sm);
-    font-size: 13px;
-}
-.custom-condition-section input:focus { border-color: var(--primary-green); outline: none; }
-.add-condition-btn {
-    width: 44px; height: 44px; border: none; border-radius: var(--radius-sm);
-    background: var(--primary-green); color: var(--white); cursor: pointer; font-size: 15px;
-}
 .custom-condition-tag {
     display: inline-flex; align-items: center; gap: 6px;
     background: var(--soft-green); color: var(--primary-green-deep);
@@ -942,6 +975,8 @@ input:focus-visible {
     color: var(--white); font-size: 15px; font-weight: 700; cursor: pointer;
     box-shadow: var(--shadow-green-glow); transition: var(--transition);
     position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 20px;
 }
 .save-profile-btn:hover { transform: translateY(-1px); }
 .save-profile-btn:active { transform: scale(0.98); }
@@ -1273,6 +1308,11 @@ input:focus-visible {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 6px; padding: 20px;
     text-align: center;
+    animation: overlayCardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes overlayCardIn {
+    from { opacity: 0; transform: scale(0.94); }
+    to   { opacity: 1; transform: scale(1); }
 }
 #barcodeOverlay .overlay-card .orb1, #barcodeOverlay .overlay-card .orb2 {
     position: absolute; border-radius: 50%; filter: blur(30px); opacity: 0.5; pointer-events: none;
@@ -1334,17 +1374,28 @@ input:focus-visible {
 .barcode-btn.manual { background: var(--soft-green); border-color: var(--mint); color: var(--primary-green-deep); }
 .barcode-btn.close { background: #FDEAEA; border-color: #F5C6C6; color: var(--danger); }
 
-#manualBarcodeInput { display: flex; gap: 8px; }
+#manualBarcodeInput { display: flex; align-items: stretch; gap: 8px; }
 #manualBarcodeInput input {
-    flex: 1; height: 48px; padding: 0 14px; border: 1.5px solid var(--border-color);
+    flex: 1; min-width: 0; height: 48px; padding: 0 14px; border: 1.5px solid var(--border-color);
     border-radius: var(--radius-sm); font-size: 14px;
 }
 #manualBarcodeInput input:focus { border-color: var(--primary-green); outline: none; }
 #manualBarcodeInput .search-btn {
+    flex-shrink: 0;
+    height: 48px;
     padding: 0 18px; border: none; border-radius: var(--radius-sm);
-    background: var(--primary-green); color: var(--white); font-weight: 700; cursor: pointer;
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-green-deep));
+    color: var(--white); font-weight: 700; font-size: 13px; white-space: nowrap;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer; box-shadow: 0 8px 16px rgba(22, 163, 74, 0.24);
+    transition: var(--transition);
 }
 #manualBarcodeInput .search-btn:active { transform: scale(0.97); }
+
+@media (max-width: 360px) {
+    #manualBarcodeInput .search-btn span.btn-text { display: none; }
+    #manualBarcodeInput .search-btn { padding: 0 16px; }
+}
 
 .ingredients-missing-card {
     background: var(--glass-bg-strong);

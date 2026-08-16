@@ -39,6 +39,9 @@
             <button type="button" id="getStartedBtn" class="auth-btn splash-cta">
                 Get Started <i class="fas fa-arrow-right"></i>
             </button>
+            <div class="splash-loading-bar">
+                <span class="splash-loading-fill"></span>
+            </div>
         </div>
 
         <!-- Auth Container (Login/Signup) -->
@@ -293,12 +296,27 @@
                         <div id="barcodeVideoContainer">
                             <video id="barcodeVideo" playsinline autoplay></video>
                             <div id="barcodeOverlay">
-                                <div>
-                                    <div class="corner-br"></div>
-                                    <div class="corner-bl"></div>
+                                <div class="overlay-card">
+                                    <div class="orb1"></div>
+                                    <div class="orb2"></div>
+                                    <div class="overlay-icon">
+                                        <i class="fas fa-barcode"></i>
+                                    </div>
+                                    <h2 class="overlay-title">Starting Camera</h2>
+                                    <p class="overlay-sub">
+                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                        Getting things ready
+                                    </p>
+                                    <div class="dot-container">
+                                        <span class="dot"></span>
+                                        <span class="dot"></span>
+                                        <span class="dot"></span>
+                                        <span class="dot"></span>
+                                        <span class="dot"></span>
+                                    </div>
                                 </div>
                             </div>
-                            <div id="barcodeStatus">📦 Looking for barcode...</div>
+                            <div id="barcodeStatus" style="display: none;">📦 Looking for barcode...</div>
                         </div>
                         
                         <div class="barcode-buttons">
@@ -317,7 +335,7 @@
                         <div id="manualBarcodeInput">
                             <input type="text" id="barcodeManualInput" placeholder="Enter barcode number..." inputmode="numeric">
                             <button id="barcodeManualSubmit" class="search-btn">
-                                <i class="fas fa-search"></i> Search Product
+                                <i class="fas fa-search"></i> <span class="btn-text">Search Product</span>
                             </button>
                         </div>
                     </div>
@@ -407,13 +425,6 @@
                                 </label>
                             </div>
 
-                            <div class="custom-condition-section">
-                                <input type="text" id="customConditionInput" placeholder="Add another condition...">
-                                <button type="button" class="add-condition-btn" onclick="addCustomCondition()">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            
                             <button class="save-profile-btn" id="saveProfileBtn">
                                 <i class="fas fa-save"></i> Save Profile
                             </button>
@@ -661,8 +672,37 @@
         // "Recent Scans" summary is computed from the same scan history
         // script.js already writes to localStorage, and the bottom-nav
         // active state simply mirrors the existing showPage() routing.
+        //
+        // IMPORTANT: everything below runs synchronously, right here —
+        // NOT inside a DOMContentLoaded callback. This script tag is the
+        // last thing in <body>, so every element above already exists,
+        // and script.js (loaded just before this) has already defined
+        // showMainApp / showPage / logout as globals. Wrapping them here,
+        // synchronously, guarantees our wrapped versions are the ones
+        // script.js's own DOMContentLoaded handler calls a moment later
+        // (that's what checkAuth() uses on every refresh) — wrapping
+        // inside our own DOMContentLoaded callback would run too late.
         // ------------------------------------------------------------------
         (function () {
+            const appInitTime = Date.now();
+            const MIN_SPLASH_MS = 1100;
+            const splash = document.getElementById('splashScreen');
+
+            // If a session already exists, skip the "Get Started" splash
+            // and show a brief loading state instead, then continue
+            // straight to Home once checkAuth() has restored the session.
+            const hasSession = !!(localStorage.getItem('nutriscan_token') && localStorage.getItem('nutriscan_user'));
+            if (splash && hasSession) {
+                splash.classList.add('loading-mode');
+            }
+
+            function dismissSplash() {
+                if (!splash) return;
+                const elapsed = Date.now() - appInitTime;
+                const remaining = Math.max(0, MIN_SPLASH_MS - elapsed);
+                setTimeout(() => splash.classList.remove('active'), remaining);
+            }
+
             function getHistory() {
                 if (typeof currentUser === 'undefined' || !currentUser || !currentUser.email) return [];
                 try {
@@ -773,16 +813,38 @@
                 const overlay = document.getElementById('logoutConfirmOverlay');
                 if (overlay) overlay.style.display = 'none';
             }
-            function interceptLogoutButton(btnId) {
-                const btn = document.getElementById(btnId);
-                if (!btn) return;
-                // Capture phase so this runs before script.js's own bubble-phase
-                // listener (which would otherwise log out immediately).
-                btn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
+
+            // Wrap the real `logout` BEFORE script.js's own DOMContentLoaded
+            // handler binds it to the top-nav button — that way the button
+            // ends up bound to our confirmation-aware wrapper instead of
+            // the instant-logout original (addEventListener captures the
+            // function reference at bind time, so this has to happen first).
+            let realLogout = null;
+            if (typeof logout === 'function') {
+                realLogout = logout;
+                logout = function () {
                     showLogoutConfirm();
-                }, true);
+                };
+            }
+
+            // ---- Wrap core navigation functions ----
+            if (typeof showMainApp === 'function') {
+                const originalShowMainApp = showMainApp;
+                showMainApp = function () {
+                    originalShowMainApp();
+                    dismissSplash();
+                    renderHomeOverview();
+                    restoreLastPage();
+                };
+            }
+            if (typeof showPage === 'function') {
+                const originalShowPage = showPage;
+                showPage = function (pageId) {
+                    originalShowPage(pageId);
+                    updateBottomNavActive(pageId);
+                    saveLastPage(pageId);
+                    if (pageId === 'homePage') renderHomeOverview();
+                };
             }
 
             // ---- Settings / Help & Support / legal reader ----
@@ -831,153 +893,137 @@
                 if (typeof showPage === 'function') showPage('legalPage');
             }
 
-            document.addEventListener('DOMContentLoaded', function () {
-                if (typeof showMainApp === 'function') {
-                    const originalShowMainApp = showMainApp;
-                    showMainApp = function () {
-                        originalShowMainApp();
-                        const splash = document.getElementById('splashScreen');
-                        if (splash) splash.classList.remove('active');
-                        renderHomeOverview();
-                        restoreLastPage();
-                    };
-                }
-                if (typeof showPage === 'function') {
-                    const originalShowPage = showPage;
-                    showPage = function (pageId) {
-                        originalShowPage(pageId);
-                        updateBottomNavActive(pageId);
-                        saveLastPage(pageId);
-                        if (pageId === 'homePage') renderHomeOverview();
-                    };
-                }
-
-                // Splash screen
-                const getStartedBtn = document.getElementById('getStartedBtn');
-                if (getStartedBtn) {
-                    getStartedBtn.addEventListener('click', () => {
-                        const splash = document.getElementById('splashScreen');
-                        if (splash) splash.classList.remove('active');
-                    });
-                }
-
-                // Home
-                const viewAllBtn = document.getElementById('homeViewAllBtn');
-                if (viewAllBtn) viewAllBtn.addEventListener('click', () => showPage('historyPage'));
-
-                // Bottom-nav scan FAB actually starts a scan now
-                const navScanFab = document.getElementById('navScanFab');
-                if (navScanFab) {
-                    navScanFab.addEventListener('click', () => {
-                        const barcodeBtn = document.getElementById('barcodeBtn');
-                        if (barcodeBtn) barcodeBtn.click();
-                    });
-                }
-
-                // Logout confirmation (top nav + profile row + settings row)
-                interceptLogoutButton('logoutBtn');
-                interceptLogoutButton('profileLogoutBtn');
-                interceptLogoutButton('settingsLogoutBtn');
-                const logoutCancelBtn = document.getElementById('logoutCancelBtn');
-                if (logoutCancelBtn) logoutCancelBtn.addEventListener('click', hideLogoutConfirm);
-                const logoutConfirmBtn = document.getElementById('logoutConfirmBtn');
-                if (logoutConfirmBtn) {
-                    logoutConfirmBtn.addEventListener('click', () => {
-                        hideLogoutConfirm();
-                        try { sessionStorage.removeItem('nutriscan_last_page'); } catch (e) {}
-                        if (typeof logout === 'function') logout();
-                    });
-                }
-
-                // Settings / Help & Support navigation
-                const goToSettingsBtn = document.getElementById('goToSettingsBtn');
-                if (goToSettingsBtn) goToSettingsBtn.addEventListener('click', () => showPage('settingsPage'));
-                const goToHelpBtn = document.getElementById('goToHelpBtn');
-                if (goToHelpBtn) goToHelpBtn.addEventListener('click', () => showPage('helpPage'));
-
-                const legalBackBtn = document.getElementById('legalBackBtn');
-                if (legalBackBtn) legalBackBtn.addEventListener('click', () => showPage(legalReturnPage));
-
-                const legalLinks = [
-                    ['settingsAboutBtn', 'about', 'settingsPage'],
-                    ['settingsPrivacyBtn', 'privacy', 'settingsPage'],
-                    ['settingsTermsBtn', 'terms', 'settingsPage'],
-                    ['helpAboutBtn', 'about', 'helpPage'],
-                    ['helpPrivacyBtn', 'privacy', 'helpPage'],
-                    ['helpTermsBtn', 'terms', 'helpPage']
-                ];
-                legalLinks.forEach(([id, type, returnPage]) => {
-                    const el = document.getElementById(id);
-                    if (el) el.addEventListener('click', () => openLegalPage(type, returnPage));
+            // ---- Wire up buttons (DOM already exists — see note above) ----
+            const getStartedBtn = document.getElementById('getStartedBtn');
+            if (getStartedBtn) {
+                getStartedBtn.addEventListener('click', () => {
+                    if (splash) splash.classList.remove('active');
                 });
+            }
 
-                // FAQ accordion
-                document.querySelectorAll('.faq-question').forEach(q => {
-                    q.addEventListener('click', () => {
-                        const item = q.closest('.faq-item');
-                        if (!item) return;
-                        const wasOpen = item.classList.contains('open');
-                        document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
-                        if (!wasOpen) item.classList.add('open');
-                    });
+            const viewAllBtn = document.getElementById('homeViewAllBtn');
+            if (viewAllBtn) viewAllBtn.addEventListener('click', () => showPage('historyPage'));
+
+            const navScanFab = document.getElementById('navScanFab');
+            if (navScanFab) {
+                navScanFab.addEventListener('click', () => {
+                    const barcodeBtn = document.getElementById('barcodeBtn');
+                    if (barcodeBtn) barcodeBtn.click();
                 });
+            }
 
-                // Change password (uses the existing PUT /api/auth/change-password endpoint)
-                const changePasswordForm = document.getElementById('changePasswordForm');
-                if (changePasswordForm) {
-                    changePasswordForm.addEventListener('submit', async function (e) {
-                        e.preventDefault();
-                        const currentPassword = document.getElementById('currentPasswordInput').value;
-                        const newPassword = document.getElementById('newPasswordInput').value;
-                        const confirmNewPassword = document.getElementById('confirmNewPasswordInput').value;
+            const profileLogoutBtn = document.getElementById('profileLogoutBtn');
+            if (profileLogoutBtn) profileLogoutBtn.addEventListener('click', showLogoutConfirm);
+            const settingsLogoutBtn = document.getElementById('settingsLogoutBtn');
+            if (settingsLogoutBtn) settingsLogoutBtn.addEventListener('click', showLogoutConfirm);
 
-                        if (newPassword !== confirmNewPassword) {
-                            if (typeof showToast === 'function') showToast('New passwords do not match', 'error');
-                            return;
-                        }
-                        if (newPassword.length < 6) {
-                            if (typeof showToast === 'function') showToast('New password must be at least 6 characters', 'error');
-                            return;
-                        }
+            const logoutCancelBtn = document.getElementById('logoutCancelBtn');
+            if (logoutCancelBtn) logoutCancelBtn.addEventListener('click', hideLogoutConfirm);
+            const logoutConfirmBtn = document.getElementById('logoutConfirmBtn');
+            if (logoutConfirmBtn) {
+                logoutConfirmBtn.addEventListener('click', () => {
+                    hideLogoutConfirm();
+                    try { sessionStorage.removeItem('nutriscan_last_page'); } catch (e) {}
+                    if (realLogout) realLogout();
+                });
+            }
 
-                        const btn = document.getElementById('changePasswordBtn');
-                        const originalText = btn ? btn.innerHTML : '';
-                        if (btn) {
-                            btn.disabled = true;
-                            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
-                        }
+            const goToSettingsBtn = document.getElementById('goToSettingsBtn');
+            if (goToSettingsBtn) goToSettingsBtn.addEventListener('click', () => showPage('settingsPage'));
+            const goToHelpBtn = document.getElementById('goToHelpBtn');
+            if (goToHelpBtn) goToHelpBtn.addEventListener('click', () => showPage('helpPage'));
 
-                        try {
-                            const token = localStorage.getItem('nutriscan_token');
-                            const response = await fetch(`${API_URL}/auth/change-password`, {
-                                method: 'PUT',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': `Bearer ${token}`
-                                },
-                                body: JSON.stringify({ currentPassword, newPassword })
-                            });
-                            const data = await response.json();
-                            if (data.success) {
-                                if (typeof showToast === 'function') showToast('✅ Password updated successfully!', 'success');
-                                changePasswordForm.reset();
-                            } else {
-                                if (typeof showToast === 'function') showToast(data.error || 'Failed to update password', 'error');
-                            }
-                        } catch (err) {
-                            if (typeof showToast === 'function') showToast('Network error. Please try again.', 'error');
-                        } finally {
-                            if (btn) {
-                                btn.disabled = false;
-                                btn.innerHTML = originalText;
-                            }
-                        }
-                    });
-                }
+            const legalBackBtn = document.getElementById('legalBackBtn');
+            if (legalBackBtn) legalBackBtn.addEventListener('click', () => showPage(legalReturnPage));
 
-                updateBottomNavActive('homePage');
-                renderHomeOverview();
+            const legalLinks = [
+                ['settingsAboutBtn', 'about', 'settingsPage'],
+                ['settingsPrivacyBtn', 'privacy', 'settingsPage'],
+                ['settingsTermsBtn', 'terms', 'settingsPage'],
+                ['helpAboutBtn', 'about', 'helpPage'],
+                ['helpPrivacyBtn', 'privacy', 'helpPage'],
+                ['helpTermsBtn', 'terms', 'helpPage']
+            ];
+            legalLinks.forEach(([id, type, returnPage]) => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('click', () => openLegalPage(type, returnPage));
             });
+
+            document.querySelectorAll('.faq-question').forEach(q => {
+                q.addEventListener('click', () => {
+                    const item = q.closest('.faq-item');
+                    if (!item) return;
+                    const wasOpen = item.classList.contains('open');
+                    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+                    if (!wasOpen) item.classList.add('open');
+                });
+            });
+
+            const changePasswordForm = document.getElementById('changePasswordForm');
+            if (changePasswordForm) {
+                changePasswordForm.addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    const currentPassword = document.getElementById('currentPasswordInput').value;
+                    const newPassword = document.getElementById('newPasswordInput').value;
+                    const confirmNewPassword = document.getElementById('confirmNewPasswordInput').value;
+
+                    if (newPassword !== confirmNewPassword) {
+                        if (typeof showToast === 'function') showToast('New passwords do not match', 'error');
+                        return;
+                    }
+                    if (newPassword.length < 6) {
+                        if (typeof showToast === 'function') showToast('New password must be at least 6 characters', 'error');
+                        return;
+                    }
+
+                    const btn = document.getElementById('changePasswordBtn');
+                    const originalText = btn ? btn.innerHTML : '';
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+                    }
+
+                    try {
+                        const token = localStorage.getItem('nutriscan_token');
+                        const response = await fetch(`${API_URL}/auth/change-password`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ currentPassword, newPassword })
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                            if (typeof showToast === 'function') showToast('✅ Password updated successfully!', 'success');
+                            changePasswordForm.reset();
+                        } else {
+                            if (typeof showToast === 'function') showToast(data.error || 'Failed to update password', 'error');
+                        }
+                    } catch (err) {
+                        if (typeof showToast === 'function') showToast('Network error. Please try again.', 'error');
+                    } finally {
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.innerHTML = originalText;
+                        }
+                    }
+                });
+            }
+
+            updateBottomNavActive('homePage');
+            renderHomeOverview();
+
+            // Safety net: if for some reason checkAuth() never resolves to
+            // showMainApp (e.g. a stale/invalid token), don't leave a
+            // logged-out user staring at a splash with no way forward.
+            if (hasSession) {
+                setTimeout(() => {
+                    if (splash && splash.classList.contains('active') && splash.classList.contains('loading-mode')) {
+                        splash.classList.remove('loading-mode');
+                    }
+                }, 4000);
+            }
         })();
     </script>
 </body>
