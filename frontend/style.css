@@ -127,30 +127,30 @@ body::after {
 }
 
 /* ---------- Floating leaves & particles (ambient, decorative) ---------- */
-.leaves-bg {
+.food-particles-bg {
     position: fixed;
     inset: 0;
     z-index: 0;
     overflow: hidden;
     pointer-events: none;
 }
-.leaf-particle {
+.food-particle {
     position: absolute;
     top: -10%;
     color: var(--primary-green);
     opacity: 0;
-    animation-name: leafFall;
+    animation-name: foodFall;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
 }
-.leaf-particle i { display: block; }
-.leaf-particle.dot {
+.food-particle i { display: block; }
+.food-particle.dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--mint);
 }
-@keyframes leafFall {
+@keyframes foodFall {
     0%   { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
     8%   { opacity: 0.85; }
     50%  { transform: translateY(50vh) translateX(26px) rotate(160deg); opacity: 0.7; }
@@ -369,7 +369,7 @@ input:focus-visible {
 
 /* Dense leaf/particle layer scoped to the splash — sits above the
    splash's own background but behind its text/button content. */
-.splash-leaves {
+.splash-food-particles {
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -378,8 +378,8 @@ input:focus-visible {
 }
 .splash-content, .splash-cta, .splash-loader { position: relative; z-index: 1; }
 
-.splash-leaf { color: var(--primary-green); }
-.splash-leaf.dot { background: var(--teal); }
+.splash-food-particle { color: var(--primary-green); }
+.splash-food-particle.dot { background: var(--teal); }
 .sl-1 { left: 8%;  top: -8%; font-size: 20px; animation-duration: 13s; animation-delay: -5s; }
 .sl-2 { left: 24%; top: -8%; font-size: 14px; animation-duration: 17s; animation-delay: -3s; }
 .sl-3 { left: 42%; top: -8%; font-size: 22px; animation-duration: 15s; animation-delay: -8s; }
