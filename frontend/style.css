@@ -1235,7 +1235,7 @@ input:focus-visible {
 
 /* Shared ripple base for all tappable primary controls */
 .tab-btn, .nav-btn, .back-btn, .reset-success-btn, .history-item, .barcode-btn,
-.action-btn, .auth-btn, .analyze-btn, .save-profile-btn, .bottom-nav-btn, .bottom-nav-fab {
+.action-btn, .auth-btn, .analyze-btn, .save-profile-btn, .bottom-nav-btn {
     position: relative;
     overflow: hidden;
 }
