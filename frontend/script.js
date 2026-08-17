@@ -665,7 +665,7 @@ async function startBarcodeScanner() {
         container.style.height = 'auto';
         container.style.aspectRatio = '1/1';
         container.style.zIndex = 'auto';
-        container.style.backgroundColor = '#171717';
+        container.style.backgroundColor = '#10251A';
         container.style.borderRadius = '16px';
         container.style.overflow = 'hidden';
         container.style.padding = '0';
@@ -839,7 +839,7 @@ function showOverlay() {
         container.style.height = 'auto';
         container.style.aspectRatio = '1/1';
         container.style.zIndex = 'auto';
-        container.style.backgroundColor = '#171717';
+        container.style.backgroundColor = '#10251A';
         container.style.borderRadius = '16px';
         container.style.overflow = 'hidden';
         container.style.padding = '0';
@@ -1119,7 +1119,7 @@ function closeBarcodeScanner() {
         container.style.height = 'auto';
         container.style.aspectRatio = '1/1';
         container.style.zIndex = 'auto';
-        container.style.backgroundColor = '#171717';
+        container.style.backgroundColor = '#10251A';
         container.style.borderRadius = '16px';
         container.style.overflow = 'hidden';
         container.style.padding = '0';
@@ -1242,10 +1242,10 @@ function displayIngredientsMissingUI(product) {
             </div>
             
             <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; justify-content: center;">
-                <button onclick="showPage('homePage')" style="padding: 12px 24px; background: #FF6B35; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
+                <button onclick="showPage('homePage')" style="padding: 12px 24px; background: #16A34A; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
                     <i class="fas fa-home"></i> Go Home
                 </button>
-                <button onclick="document.getElementById('uploadBtn').click(); showPage('homePage');" style="padding: 12px 24px; background: #E8590C; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
+                <button onclick="document.getElementById('uploadBtn').click(); showPage('homePage');" style="padding: 12px 24px; background: #0EA5A4; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
                     <i class="fas fa-upload"></i> Upload Image
                 </button>
             </div>
@@ -1275,7 +1275,7 @@ function displayBarcodeResults(data) {
                         3️⃣ Search by product name in the app
                     </p>
                 </div>
-                <button onclick="showPage('homePage')" style="margin-top: 16px; padding: 10px 24px; background: #FF6B35; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
+                <button onclick="showPage('homePage')" style="margin-top: 16px; padding: 10px 24px; background: #16A34A; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">
                     <i class="fas fa-home"></i> Go Home
                 </button>
             </div>
@@ -1284,9 +1284,9 @@ function displayBarcodeResults(data) {
     }
     
     let html = `
-        <div class="product-header" style="background: linear-gradient(135deg, #FFF3E9, #FFE0C7); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+        <div class="product-header" style="background: linear-gradient(135deg, #E6FBFA, #CFF5F3); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
             ${product.image ? `<img src="${product.image}" alt="${product.name}" style="max-width: 100px; max-height: 100px; object-fit: contain; display: block; margin: 0 auto 8px; border-radius: 8px;">` : ''}
-            <h3 style="text-align: center; margin: 8px 0 4px; font-size: 20px; color: #7C2D12;">${product.name || 'Unknown Product'}</h3>
+            <h3 style="text-align: center; margin: 8px 0 4px; font-size: 20px; color: #0B4F4E;">${product.name || 'Unknown Product'}</h3>
             ${product.brand ? `<p style="text-align: center; color: #555; font-size: 15px; margin: 0;">🏷️ ${product.brand}</p>` : ''}
             ${product.barcode ? `<p style="text-align: center; color: #888; font-size: 12px; margin: 4px 0 0;">📦 Barcode: ${product.barcode}</p>` : ''}
         </div>
@@ -1347,9 +1347,9 @@ function displayBarcodeResults(data) {
             let status = 'low';
             let statusText = 'Good';
             let statusEmoji = '🟢';
-            let color = '#22C55E';
+            let color = '#16A34A';
             let bgColor = '#e8f8ef';
-            let borderColor = '#22C55E';
+            let borderColor = '#16A34A';
             
             if (pct > 80) {
                 status = 'high';
@@ -1390,9 +1390,9 @@ function displayBarcodeResults(data) {
             let status = 'low';
             let statusText = 'Good';
             let statusEmoji = '🟢';
-            let color = '#22C55E';
+            let color = '#16A34A';
             let bgColor = '#e8f8ef';
-            let borderColor = '#22C55E';
+            let borderColor = '#16A34A';
             
             if (pct > 80) {
                 status = 'high';
@@ -1433,9 +1433,9 @@ function displayBarcodeResults(data) {
             let status = 'low';
             let statusText = 'Good';
             let statusEmoji = '🟢';
-            let color = '#22C55E';
+            let color = '#16A34A';
             let bgColor = '#e8f8ef';
-            let borderColor = '#22C55E';
+            let borderColor = '#16A34A';
             
             if (pct > 80) {
                 status = 'high';
@@ -1527,20 +1527,20 @@ function displayBarcodeResults(data) {
         const score = analysis.score;
         const rating = analysis.rating || 'Moderate';
         let scoreColor = '#F59E0B';
-        if (score >= 7) scoreColor = '#22C55E';
+        if (score >= 7) scoreColor = '#16A34A';
         else if (score >= 4) scoreColor = '#F59E0B';
         else scoreColor = '#EF4444';
         
         html += `
-            <div class="score-section" style="text-align: center; padding: 20px 15px; background: linear-gradient(135deg, #FFF3E9, #FFFFFF);">
+            <div class="score-section" style="text-align: center; padding: 20px 15px; background: linear-gradient(135deg, #f8f9fa, #ffffff);">
                 <div style="position: relative; display: inline-block;">
                     <svg width="180" height="180" viewBox="0 0 200 200">
-                        <circle cx="100" cy="100" r="80" fill="none" stroke="#F3E0CE" stroke-width="14"/>
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="#e8e8e8" stroke-width="14"/>
                         <circle cx="100" cy="100" r="80" fill="none" stroke="${scoreColor}" stroke-width="14"
                             stroke-dasharray="${2 * Math.PI * 80}" stroke-dashoffset="${2 * Math.PI * 80 - (score / 10) * 2 * Math.PI * 80}"
                             stroke-linecap="round" transform="rotate(-90 100 100)"/>
-                        <text x="100" y="95" text-anchor="middle" font-size="40" font-weight="800" fill="#171717">${score}</text>
-                        <text x="100" y="125" text-anchor="middle" font-size="14" fill="#737373" font-weight="500">out of 10</text>
+                        <text x="100" y="95" text-anchor="middle" font-size="40" font-weight="800" fill="#222">${score}</text>
+                        <text x="100" y="125" text-anchor="middle" font-size="14" fill="#888" font-weight="500">out of 10</text>
                     </svg>
                 </div>
                 <div style="margin-top: 8px;">
@@ -1582,7 +1582,7 @@ function displayBarcodeResults(data) {
     if (explanation && explanation.goodDetails && explanation.goodDetails.length > 0) {
         html += `<div class="info-card"><h4><i class="fas fa-check-circle"></i> Beneficial Ingredients</h4>`;
         explanation.goodDetails.forEach(detail => {
-            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #22C55E;"></i> ${detail}</p>`;
+            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #16A34A;"></i> ${detail}</p>`;
         });
         html += `</div>`;
     } else {
@@ -1598,8 +1598,8 @@ function displayBarcodeResults(data) {
     
     if (explanation && explanation.alternatives && explanation.alternatives.length > 0) {
         html += `
-            <div class="info-card" style="border: 2px solid #22C55E; background: linear-gradient(135deg, #f0faf0, #e8f5e9); padding: 16px;">
-                <h4 style="color: #22C55E; font-size: 16px;"><i class="fas fa-star" style="color: #FFD700;"></i> Healthier Alternatives <span style="font-size: 12px; color: #666; font-weight: normal;">— Best Picks</span></h4>
+            <div class="info-card" style="border: 2px solid #16A34A; background: linear-gradient(135deg, #f0faf0, #e8f5e9); padding: 16px;">
+                <h4 style="color: #16A34A; font-size: 16px;"><i class="fas fa-star" style="color: #FFD700;"></i> Healthier Alternatives <span style="font-size: 12px; color: #666; font-weight: normal;">— Best Picks</span></h4>
                 <div style="display: grid; gap: 12px; margin-top: 10px;">
         `;
         
@@ -1608,21 +1608,21 @@ function displayBarcodeResults(data) {
             if (typeof alt === 'object' && alt.name) {
                 const productLink = alt.link || `https://www.amazon.in/s?k=${encodeURIComponent(alt.name)}`;
                 html += `
-                    <div style="background: white; border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid ${index === 0 ? '#22C55E' : '#F59E0B'};">
+                    <div style="background: white; border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid ${index === 0 ? '#16A34A' : '#F59E0B'};">
                         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                             <span style="font-size: 22px;">${icons[index] || '⭐'}</span>
                             <div style="flex: 1; min-width: 120px;">
-                                <strong style="font-size: 15px; color: #22C55E;">${alt.name}</strong>
+                                <strong style="font-size: 15px; color: #16A34A;">${alt.name}</strong>
                                 <p style="font-size: 13px; color: #555; margin: 3px 0 0 0;">${alt.description}</p>
                             </div>
-                            <a href="${productLink}" target="_blank" rel="noopener noreferrer" style="background: #22C55E; color: white; padding: 6px 16px; border-radius: 20px; text-decoration: none; font-size: 12px; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
+                            <a href="${productLink}" target="_blank" rel="noopener noreferrer" style="background: #16A34A; color: white; padding: 6px 16px; border-radius: 20px; text-decoration: none; font-size: 12px; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;">
                                 <i class="fas fa-external-link-alt"></i> View
                             </a>
                         </div>
                     </div>
                 `;
             } else if (typeof alt === 'string') {
-                html += `<p style="margin-bottom: 6px; font-size: 14px;"><i class="fas fa-check" style="color: #22C55E;"></i> ${alt}</p>`;
+                html += `<p style="margin-bottom: 6px; font-size: 14px;"><i class="fas fa-check" style="color: #16A34A;"></i> ${alt}</p>`;
             }
         });
         
@@ -1684,30 +1684,30 @@ function displayResults(data) {
     let ratingColor = '#F59E0B';
     
     if (realScore >= 7) {
-        scoreColor = '#22C55E';
-        ratingBg = 'rgba(34, 197, 94, 0.12)';
-        ratingColor = '#22C55E';
+        scoreColor = '#16A34A';
+        ratingBg = 'rgba(76, 175, 80, 0.1)';
+        ratingColor = '#16A34A';
     } else if (realScore >= 4) {
         scoreColor = '#F59E0B';
         ratingBg = 'rgba(255, 152, 0, 0.1)';
         ratingColor = '#F59E0B';
     } else {
         scoreColor = '#EF4444';
-        ratingBg = 'rgba(239, 68, 68, 0.1)';
+        ratingBg = 'rgba(244, 67, 54, 0.1)';
         ratingColor = '#EF4444';
     }
     
     let html = `
-        <div class="score-section" style="text-align: center; padding: 20px 15px; background: linear-gradient(135deg, #FFF3E9, #FFFFFF);">
+        <div class="score-section" style="text-align: center; padding: 20px 15px; background: linear-gradient(135deg, #f8f9fa, #ffffff);">
             <div style="position: relative; display: inline-block;">
                 <svg width="220" height="220" viewBox="0 0 200 200">
-                    <circle cx="100" cy="100" r="80" fill="none" stroke="#F3E0CE" stroke-width="14"/>
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="#e8e8e8" stroke-width="14"/>
                     <circle cx="100" cy="100" r="80" fill="none" stroke="${scoreColor}" stroke-width="14"
                         stroke-dasharray="${2 * Math.PI * 80}" stroke-dashoffset="${2 * Math.PI * 80 - (realScore / 10) * 2 * Math.PI * 80}"
                         stroke-linecap="round" transform="rotate(-90 100 100)"
                         style="transition: stroke-dashoffset 1.5s ease;"/>
-                    <text x="100" y="95" text-anchor="middle" font-size="48" font-weight="800" fill="#171717">${realScore}</text>
-                    <text x="100" y="125" text-anchor="middle" font-size="16" fill="#737373" font-weight="500">out of 10</text>
+                    <text x="100" y="95" text-anchor="middle" font-size="48" font-weight="800" fill="#222">${realScore}</text>
+                    <text x="100" y="125" text-anchor="middle" font-size="16" fill="#888" font-weight="500">out of 10</text>
                 </svg>
             </div>
             <div style="margin-top: 12px;">
@@ -1739,9 +1739,9 @@ function displayResults(data) {
         ingredients.forEach((item) => {
             const data = item.data;
             const pct = Math.min((data.actual / data.limit) * 100, 100);
-            const color = data.status === 'high' ? '#EF4444' : data.status === 'moderate' ? '#F59E0B' : '#22C55E';
+            const color = data.status === 'high' ? '#EF4444' : data.status === 'moderate' ? '#F59E0B' : '#16A34A';
             const bgColor = data.status === 'high' ? '#fde8e8' : data.status === 'moderate' ? '#fef9e7' : '#e8f8ef';
-            const borderColor = data.status === 'high' ? '#EF4444' : data.status === 'moderate' ? '#F59E0B' : '#22C55E';
+            const borderColor = data.status === 'high' ? '#EF4444' : data.status === 'moderate' ? '#F59E0B' : '#16A34A';
             const statusEmoji = data.status === 'high' ? '🔴' : data.status === 'moderate' ? '🟡' : '🟢';
             const statusTextIng = data.status === 'high' ? 'Too High' : data.status === 'moderate' ? 'Moderate' : 'Good';
             
@@ -1811,15 +1811,15 @@ function displayResults(data) {
     if (explanation.goodDetails && explanation.goodDetails.length > 0) {
         html += `<div class="info-card"><h4><i class="fas fa-check-circle"></i> Beneficial Ingredients</h4>`;
         explanation.goodDetails.forEach(detail => {
-            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #22C55E;"></i> ${detail}</p>`;
+            html += `<p style="margin-bottom: 10px; font-size: 14px;"><i class="fas fa-angle-right" style="color: #16A34A;"></i> ${detail}</p>`;
         });
         html += `</div>`;
     }
     
     if (explanation.alternatives && explanation.alternatives.length > 0) {
         html += `
-            <div class="info-card" style="border: 2px solid #22C55E; background: linear-gradient(135deg, #f0faf0, #e8f5e9); padding: 16px;">
-                <h4 style="color: #22C55E; font-size: 16px;"><i class="fas fa-star" style="color: #FFD700;"></i> Healthier Alternatives <span style="font-size: 12px; color: #666; font-weight: normal;">— Best Picks</span></h4>
+            <div class="info-card" style="border: 2px solid #16A34A; background: linear-gradient(135deg, #f0faf0, #e8f5e9); padding: 16px;">
+                <h4 style="color: #16A34A; font-size: 16px;"><i class="fas fa-star" style="color: #FFD700;"></i> Healthier Alternatives <span style="font-size: 12px; color: #666; font-weight: normal;">— Best Picks</span></h4>
                 <div style="display: grid; gap: 12px; margin-top: 10px;">
         `;
         
@@ -1828,21 +1828,21 @@ function displayResults(data) {
             if (typeof alt === 'object' && alt.name) {
                 const productLink = alt.link || `https://www.amazon.in/s?k=${encodeURIComponent(alt.name)}`;
                 html += `
-                    <div style="background: white; border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid ${index === 0 ? '#22C55E' : '#F59E0B'};">
+                    <div style="background: white; border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid ${index === 0 ? '#16A34A' : '#F59E0B'};">
                         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                             <span style="font-size: 22px;">${icons[index] || '⭐'}</span>
                             <div style="flex: 1; min-width: 120px;">
-                                <strong style="font-size: 15px; color: #22C55E;">${alt.name}</strong>
+                                <strong style="font-size: 15px; color: #16A34A;">${alt.name}</strong>
                                 <p style="font-size: 13px; color: #555; margin: 3px 0 0 0;">${alt.description}</p>
                             </div>
-                            <a href="${productLink}" target="_blank" style="background: #22C55E; color: white; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; white-space: nowrap;">
+                            <a href="${productLink}" target="_blank" style="background: #16A34A; color: white; padding: 5px 14px; border-radius: 20px; text-decoration: none; font-size: 12px; white-space: nowrap;">
                                 <i class="fas fa-external-link-alt"></i> View
                             </a>
                         </div>
                     </div>
                 `;
             } else if (typeof alt === 'string') {
-                html += `<p style="margin-bottom: 6px; font-size: 14px;"><i class="fas fa-check" style="color: #22C55E;"></i> ${alt}</p>`;
+                html += `<p style="margin-bottom: 6px; font-size: 14px;"><i class="fas fa-check" style="color: #16A34A;"></i> ${alt}</p>`;
             }
         });
         
@@ -2026,7 +2026,7 @@ async function openCamera() {
         modeToggle.style.cssText = `
             position: absolute; top: 20px; left: 20px;
             padding: 10px 20px;
-            background: #FF6B35;
+            background: #16A34A;
             color: white;
             border: none;
             border-radius: 30px;
@@ -2060,7 +2060,7 @@ async function openCamera() {
         captureBtn.innerHTML = '📸 Manual Capture';
         captureBtn.style.cssText = `
             margin-top: 20px; padding: 15px 30px;
-            background: #E8590C;
+            background: #0EA5A4;
             color: white;
             border: none;
             border-radius: 50px;
@@ -2102,7 +2102,7 @@ async function openCamera() {
             isAutoMode = !isAutoMode;
             if (isAutoMode) {
                 modeToggle.innerHTML = '🤖 Auto Detect ON';
-                modeToggle.style.background = '#FF6B35';
+                modeToggle.style.background = '#16A34A';
                 statusText.innerHTML = '🔍 Auto detecting ingredients...';
                 statusText.style.display = 'block';
                 if (detectionInterval) {
@@ -2208,7 +2208,7 @@ function showPhotoPreview(blob, stream) {
         max-height: 50vh;
         border-radius: 12px;
         margin-bottom: 15px;
-        border: 3px solid #FF6B35;
+        border: 3px solid #16A34A;
         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     `;
     
@@ -2216,7 +2216,7 @@ function showPhotoPreview(blob, stream) {
     confirmBtn.innerHTML = '✅ Confirm & Analyze';
     confirmBtn.style.cssText = `
         padding: 12px 25px;
-        background: #FF6B35;
+        background: #16A34A;
         color: white;
         border: none;
         border-radius: 50px;
@@ -2303,13 +2303,13 @@ function detectTextRegions(imageData, width, height) {
 function drawDetectionBorder(ctx, width, height, hasText) {
     if (!hasText) return;
     
-    ctx.strokeStyle = '#FF6B35';
+    ctx.strokeStyle = '#16A34A';
     ctx.lineWidth = 3;
     ctx.setLineDash([10, 5]);
     ctx.strokeRect(20, 20, width - 40, height - 40);
     
     ctx.setLineDash([]);
-    ctx.strokeStyle = '#FF6B35';
+    ctx.strokeStyle = '#16A34A';
     ctx.lineWidth = 4;
     
     ctx.beginPath();
@@ -2498,18 +2498,11 @@ function initEventListeners() {
     // BACK TO LOGIN - Reset Password form se
     document.getElementById('backToLoginFromReset').addEventListener('click', (e) => {
         e.preventDefault();
-        localStorage.removeItem('nutriscan_token');
-        localStorage.removeItem('nutriscan_user');
         window.location.href = '/';
     });
 
     // GO TO LOGIN - from the password reset success overlay
     document.getElementById('goToLoginBtn').addEventListener('click', () => {
-        // A password reset always means "log me out everywhere and let me
-        // sign in fresh" — clear any leftover session first so this reliably
-        // lands on the login form instead of an old logged-in home screen.
-        localStorage.removeItem('nutriscan_token');
-        localStorage.removeItem('nutriscan_user');
         window.location.href = '/';
     });
     
@@ -2655,26 +2648,40 @@ function initEventListeners() {
     if (clearHistoryBtn) {
         clearHistoryBtn.addEventListener('click', () => {
             const modal = document.createElement('div');
-            modal.className = 'reset-success-overlay';
-            modal.style.display = 'flex';
-
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 10001;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
             const modalContent = document.createElement('div');
-            modalContent.className = 'reset-success-card';
+            modalContent.style.cssText = `
+                background: white;
+                border-radius: 16px;
+                padding: 24px;
+                max-width: 300px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            `;
+            
             modalContent.innerHTML = `
-                <div class="reset-success-icon logout-icon">
-                    <i class="fas fa-trash"></i>
-                </div>
-                <h2>Clear History?</h2>
-                <div class="label-rule"></div>
-                <p>Are you sure you want to clear all your scan history? This action cannot be undone.</p>
-                <div class="logout-confirm-actions">
-                    <button id="cancelClearBtn" class="logout-cancel-btn">Cancel</button>
-                    <button id="confirmClearBtn" class="reset-success-btn logout-confirm-btn">
-                        <i class="fas fa-trash"></i> Yes, Clear
-                    </button>
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #EF4444; margin-bottom: 16px; display: block;"></i>
+                <h3 style="margin-bottom: 8px; font-size: 18px;">Clear History?</h3>
+                <p style="margin-bottom: 20px; color: #666; font-size: 14px;">Are you sure you want to clear all your scan history? This action cannot be undone.</p>
+                <div style="display: flex; gap: 12px;">
+                    <button id="confirmClearBtn" style="flex: 1; padding: 10px; background: #EF4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Yes, Clear</button>
+                    <button id="cancelClearBtn" style="flex: 1; padding: 10px; background: #ccc; color: #333; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Cancel</button>
                 </div>
             `;
-
+            
             modal.appendChild(modalContent);
             document.body.appendChild(modal);
             
