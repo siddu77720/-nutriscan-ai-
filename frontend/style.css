@@ -270,6 +270,15 @@ input:focus-visible {
 .tagline { font-size: 13px; color: var(--gray); margin-top: 2px; font-weight: 500; }
 .auth-header .label-rule { margin-top: 12px; }
 
+/* Forgot-password / reset-password sub-form header — same visual
+   language as the main auth header (icon badge, heading, subtitle) */
+.auth-subform-header { text-align: center; margin-bottom: 22px; }
+.auth-subform-icon { width: 56px; height: 56px; border-radius: 18px; margin-bottom: 12px; }
+.auth-subform-icon i { font-size: 24px; }
+.auth-subform-header h3 { font-size: 19px; font-weight: 800; color: var(--primary-green-dark); }
+.auth-subform-header p { font-size: 13px; color: var(--gray); margin-top: 4px; line-height: 1.5; }
+.auth-subform-footer { text-align: center; margin-top: 16px; }
+
 .auth-tabs {
     display: flex;
     background: var(--light-gray);
@@ -1265,11 +1274,27 @@ input:focus-visible {
     background: var(--white); border-radius: var(--radius-lg);
     padding: 32px 26px; text-align: center; max-width: 340px;
     box-shadow: var(--shadow-lg);
+    animation: cardRise 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reset-success-icon {
+    position: relative;
     width: 60px; height: 60px; margin: 0 auto 14px; border-radius: 50%;
     background: var(--soft-green); color: var(--primary-green-deep);
     display: flex; align-items: center; justify-content: center; font-size: 24px;
+}
+.reset-success-icon::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-green-deep);
+    opacity: 0.5;
+    animation: successPulse 1.8s ease-out infinite;
+}
+.reset-success-icon.logout-icon::after { border-color: var(--danger); }
+@keyframes successPulse {
+    0%   { transform: scale(0.9); opacity: 0.6; }
+    100% { transform: scale(1.35); opacity: 0; }
 }
 .reset-success-card h2 { font-size: 17px; font-weight: 800; color: var(--primary-green-dark); }
 .reset-success-card .label-rule { margin: 10px auto; }

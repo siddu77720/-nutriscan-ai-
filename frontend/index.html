@@ -123,57 +123,52 @@
 
                 <!-- FORGOT PASSWORD FORM -->
                 <form id="forgotPasswordForm" class="auth-form">
-                    <div style="text-align: center; margin-bottom: 16px;">
-                        <i class="fas fa-key" style="font-size: 40px; color: #2E7D32;"></i>
-                        <h3 style="margin: 8px 0 4px;">Forgot Password?</h3>
-                        <p style="color: #888; font-size: 13px;">Enter your email to reset password</p>
+                    <div class="auth-subform-header">
+                        <div class="logo-icon auth-subform-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h3>Forgot Password?</h3>
+                        <p>Enter your email and we'll send you a reset link</p>
                     </div>
                     <div class="input-group">
                         <i class="fas fa-envelope"></i>
                         <input type="email" id="forgotEmail" placeholder="Enter your email" required>
                     </div>
                     <button type="submit" class="auth-btn">Send Reset Link</button>
-                    <div style="text-align: center; margin-top: 12px;">
-                        <a href="#" id="backToLogin" style="color: #2E7D32; text-decoration: none; font-size: 14px; cursor: pointer;">
+                    <div class="auth-subform-footer">
+                        <a href="#" id="backToLogin" class="forgot-link">
                             <i class="fas fa-arrow-left"></i> Back to Login
                         </a>
                     </div>
                 </form>
 
-                <!-- ============================================================ -->
-                <!-- RESET PASSWORD FORM - FIXED: NO EYE ICON, ALWAYS VISIBLE      -->
-                <!-- ============================================================ -->
+                <!-- RESET PASSWORD FORM -->
                 <form id="resetPasswordForm" class="auth-form">
-                    <div style="text-align: center; margin-bottom: 16px;">
-                        <i class="fas fa-lock" style="font-size: 40px; color: #2E7D32;"></i>
-                        <h3 style="margin: 8px 0 4px;">Reset Password</h3>
-                        <p style="color: #888; font-size: 13px;">Enter your new password</p>
+                    <div class="auth-subform-header">
+                        <div class="logo-icon auth-subform-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Reset Password</h3>
+                        <p>Enter your new password below</p>
                     </div>
-                    
-                    <!-- NEW PASSWORD - NO EYE ICON, TYPE="text" = ALWAYS VISIBLE -->
-                    <div class="input-group" style="position: relative; margin-bottom: 20px;">
-                        <i class="fas fa-lock" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #888; z-index: 2;"></i>
-                        <input type="text" id="resetNewPassword" placeholder="New password (min 6 characters)" required style="width: 100%; height: 50px; padding: 12px 16px 12px 48px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 16px; background: white; box-sizing: border-box;">
-                        <!-- EYE ICON REMOVED ✅ -->
+
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="text" id="resetNewPassword" placeholder="New password (min 6 characters)" required>
                     </div>
-                    
-                    <!-- CONFIRM PASSWORD - NO EYE ICON, TYPE="text" = ALWAYS VISIBLE -->
-                    <div class="input-group" style="position: relative; margin-bottom: 20px;">
-                        <i class="fas fa-lock" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #888; z-index: 2;"></i>
-                        <input type="text" id="resetConfirmPassword" placeholder="Confirm new password" required style="width: 100%; height: 50px; padding: 12px 16px 12px 48px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 16px; background: white; box-sizing: border-box;">
-                        <!-- EYE ICON REMOVED ✅ -->
+
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="text" id="resetConfirmPassword" placeholder="Confirm new password" required>
                     </div>
-                    
+
                     <button type="submit" class="auth-btn">Reset Password</button>
-                    <div style="text-align: center; margin-top: 12px;">
-                        <a href="#" id="backToLoginFromReset" style="color: #2E7D32; text-decoration: none; font-size: 14px; cursor: pointer;">
+                    <div class="auth-subform-footer">
+                        <a href="#" id="backToLoginFromReset" class="forgot-link">
                             <i class="fas fa-arrow-left"></i> Back to Login
                         </a>
                     </div>
                 </form>
-                <!-- ============================================================ -->
-                <!-- END RESET PASSWORD FORM                                       -->
-                <!-- ============================================================ -->
             </div>
         </div>
         

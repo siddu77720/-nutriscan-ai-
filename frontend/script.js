@@ -2498,11 +2498,18 @@ function initEventListeners() {
     // BACK TO LOGIN - Reset Password form se
     document.getElementById('backToLoginFromReset').addEventListener('click', (e) => {
         e.preventDefault();
+        localStorage.removeItem('nutriscan_token');
+        localStorage.removeItem('nutriscan_user');
         window.location.href = '/';
     });
 
     // GO TO LOGIN - from the password reset success overlay
     document.getElementById('goToLoginBtn').addEventListener('click', () => {
+        // A password reset always means "log me out everywhere and let me
+        // sign in fresh" — clear any leftover session first so this reliably
+        // lands on the login form instead of an old logged-in home screen.
+        localStorage.removeItem('nutriscan_token');
+        localStorage.removeItem('nutriscan_user');
         window.location.href = '/';
     });
     
@@ -2648,40 +2655,26 @@ function initEventListeners() {
     if (clearHistoryBtn) {
         clearHistoryBtn.addEventListener('click', () => {
             const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 10001;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            `;
-            
+            modal.className = 'reset-success-overlay';
+            modal.style.display = 'flex';
+
             const modalContent = document.createElement('div');
-            modalContent.style.cssText = `
-                background: white;
-                border-radius: 16px;
-                padding: 24px;
-                max-width: 300px;
-                width: 90%;
-                text-align: center;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            `;
-            
+            modalContent.className = 'reset-success-card';
             modalContent.innerHTML = `
-                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #EF4444; margin-bottom: 16px; display: block;"></i>
-                <h3 style="margin-bottom: 8px; font-size: 18px;">Clear History?</h3>
-                <p style="margin-bottom: 20px; color: #666; font-size: 14px;">Are you sure you want to clear all your scan history? This action cannot be undone.</p>
-                <div style="display: flex; gap: 12px;">
-                    <button id="confirmClearBtn" style="flex: 1; padding: 10px; background: #EF4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Yes, Clear</button>
-                    <button id="cancelClearBtn" style="flex: 1; padding: 10px; background: #ccc; color: #333; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">Cancel</button>
+                <div class="reset-success-icon logout-icon">
+                    <i class="fas fa-trash"></i>
+                </div>
+                <h2>Clear History?</h2>
+                <div class="label-rule"></div>
+                <p>Are you sure you want to clear all your scan history? This action cannot be undone.</p>
+                <div class="logout-confirm-actions">
+                    <button id="cancelClearBtn" class="logout-cancel-btn">Cancel</button>
+                    <button id="confirmClearBtn" class="reset-success-btn logout-confirm-btn">
+                        <i class="fas fa-trash"></i> Yes, Clear
+                    </button>
                 </div>
             `;
-            
+
             modal.appendChild(modalContent);
             document.body.appendChild(modal);
             
