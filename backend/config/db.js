@@ -1,5 +1,13 @@
 // backend/config/db.js - COMPLETE FIX
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Fix querySrv ENOTFOUND when local ISP/router DNS fails to resolve MongoDB Atlas SRV records
+try {
+    dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch (err) {
+    // Some serverless environments restrict setting custom DNS
+}
 
 const connectionOptions = {
     serverSelectionTimeoutMS: 30000,
